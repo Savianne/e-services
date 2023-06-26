@@ -13,6 +13,7 @@ import {
 
 import { Container, Content } from "../../app/AppLayout";
 import ResidentsTable from "../../app/ResidentsTable";
+import useGetResidentsRecord from "../../API/hooks/useGetResidentsRecord";
 
 const TableContainer = styled(Box)`
     display: block;
@@ -26,13 +27,23 @@ const TableContent = styled(Content)`
 `;
 
 const Residents: React.FC = () => {
+    const {data, isLoading, isError, isSuccess} = useGetResidentsRecord();
+    React.useEffect(() => {
+        console.log(data)
+    }, [data])
     return (
         <>
             <SiteMapBoard title="Residents" path="/information / residents" />
             <Container>
                 <TableContent>
                     <TableContainer>
-                        <ResidentsTable />
+                        {
+                            isLoading && <h1>Loading...</h1>
+                        }
+                        {
+                            data && <ResidentsTable residents={data} />
+                        }
+                        
                     </TableContainer>
                 </TableContent>
             </Container>

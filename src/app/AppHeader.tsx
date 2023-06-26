@@ -27,7 +27,7 @@ const AppHeader = styled(FCAppHeader)`
     top: 0;
     display: flex;
     flex: 0 1 100%;
-    height: 65px;
+    height: 95px;
     justify-content: center;
     backdrop-filter: blur(30px);
     background-color: ${(props) => props.theme.customTheme.mainBackground};

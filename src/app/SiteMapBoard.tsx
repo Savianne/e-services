@@ -18,7 +18,7 @@ interface IFCSiteMapBoard extends IStyledFC {
 const FCSiteMapBoard: React.FC<IFCSiteMapBoard> = ({className, title, path, children}) => {
     return (
         <div className={className}>
-            <img className="logo" src={`${window.location.origin}/assets/images/favlogo.png`} />
+            <img className="logo" src={`${window.location.origin}/logo.png`} />
             <div className="board-content">
                 {
                     children? children : <>

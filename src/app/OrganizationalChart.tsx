@@ -173,8 +173,100 @@ const OrgChartContainer = styled(Box)`
     height: fit-content;
 `;
 
-const BrgyOrganizationalChart: React.FC<{org: IBrgyOrgChart}> = ({org}) => {
-
+const BrgyOrganizationalChart: React.FC = () => {
+    const org:IBrgyOrgChart = {
+        term: "2018-2021",
+        punongBarangay: {
+          name: 'Apple Jane De Guzman',
+          role: 'Punong Barangay',
+          avatar: "assets/images/avatar/apple.png"
+        },
+        secretary: {
+          name: 'Danielle R. Bacabitas',
+          role: 'Brgy. Secretary',
+          avatar: "assets/images/avatar/apple.png"
+        },
+        treasurer: {
+          name: 'Danica Santos-Esteban',
+          role: 'Brgy. Treasurer',
+          avatar: "assets/images/avatar/apple.png"
+        },
+        kagawad: [{
+          name: 'Greggy B. Leal',
+          role: 'Brgy. 1st Kagawad',
+          avatar: "assets/images/avatar/apple.png"
+        },{
+          name: 'Greggy B. Leal',
+          role: 'Brgy. Kagawad',
+          avatar: "assets/images/avatar/apple.png"
+        },{
+          name: 'Greggy B. Leal',
+          role: 'Brgy. Kagawad',
+          avatar: "assets/images/avatar/apple.png"
+        },{
+          name: 'Greggy B. Leal',
+          role: 'Brgy. Kagawad',
+          avatar: "assets/images/avatar/apple.png"
+        },{
+          name: 'Greggy B. Leal',
+          role: 'Brgy. Kagawad',
+          avatar: "assets/images/avatar/apple.png"
+        },{
+          name: 'Greggy B. Leal',
+          role: 'Brgy. Kagawad',
+          avatar: "assets/images/avatar/apple.png"
+        },{
+          name: 'Greggy B. Leal',
+          role: 'Brgy. Kagawad',
+          avatar: "assets/images/avatar/apple.png"
+        },],
+        skChairPerson: {
+          chairPerson: {
+            name: 'Lizette Santos',
+            role: 'SK Chairperson',
+            avatar: "assets/images/avatar/apple.png"
+          },
+          skSecretary: {
+            name: 'Joylyn Obina',
+            role: 'SK Secretary',
+            avatar: "assets/images/avatar/apple.png"
+          },
+          skTreasurer: {
+            name: 'Joylyn Obina',
+            role: 'SK Treasurer',
+            avatar: "assets/images/avatar/apple.png"
+          },
+          skKagawad: [{
+            name: 'Mark Niño Baylon',
+            role: 'SK Kagawad',
+            avatar: "assets/images/avatar/apple.png"
+          },{
+            name: 'Mark Niño Baylon',
+            role: 'SK Kagawad',
+            avatar: "assets/images/avatar/apple.png"
+          },{
+            name: 'Mark Niño Baylon',
+            role: 'SK Kagawad',
+            avatar: "assets/images/avatar/apple.png"
+          },{
+            name: 'Mark Niño Baylon',
+            role: 'SK Kagawad',
+            avatar: "assets/images/avatar/apple.png"
+          },{
+            name: 'Mark Niño Baylon',
+            role: 'SK Kagawad',
+            avatar: "assets/images/avatar/apple.png"
+          },{
+            name: 'Mark Niño Baylon',
+            role: 'SK Kagawad',
+            avatar: "assets/images/avatar/apple.png"
+          },{
+            name: 'Mark Niño Baylon',
+            role: 'SK Kagawad',
+            avatar: "assets/images/avatar/apple.png"
+          },],
+        }
+      }
     return (
         <OrgChartContainer>
             <Tree
@@ -185,14 +277,14 @@ const BrgyOrganizationalChart: React.FC<{org: IBrgyOrgChart}> = ({org}) => {
             >
                 <TreeNode label={<OrgPersonel color="rgb(169, 209, 142)" personel={org.secretary} />} />
                 
-                <TreeNode label={<TreeNodeParent avatar="assets/images/Favlogo.png" title="Brangay Kagawads"/>}>
-                    <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[0]} logo="assets/images/Favlogo.png" />}>
-                        <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[1]} logo="assets/images/Favlogo.png" />}>
-                            <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[2]} logo="assets/images/Favlogo.png" />}>
-                                <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[3]} logo="assets/images/Favlogo.png" />}>
-                                    <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[4]} logo="assets/images/Favlogo.png" />}>
-                                        <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[5]} logo="assets/images/Favlogo.png" />}>
-                                            <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[6]} logo="assets/images/Favlogo.png" />} />
+                <TreeNode label={<TreeNodeParent avatar="/brgy-sandiat-centro-logo.jpg" title="Brangay Kagawads"/>}>
+                    <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[0]} logo="/brgy-sandiat-centro-logo.jpg" />}>
+                        <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[1]} logo="/brgy-sandiat-centro-logo.jpg" />}>
+                            <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[2]} logo="/brgy-sandiat-centro-logo.jpg" />}>
+                                <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[3]} logo="/brgy-sandiat-centro-logo.jpg" />}>
+                                    <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[4]} logo="/brgy-sandiat-centro-logo.jpg" />}>
+                                        <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[5]} logo="/brgy-sandiat-centro-logo.jpg" />}>
+                                            <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[6]} logo="/brgy-sandiat-centro-logo.jpg" />} />
                                         </TreeNode>
                                     </TreeNode>
                                 </TreeNode>

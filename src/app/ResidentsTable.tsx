@@ -2,12 +2,14 @@ import React, { FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MaterialReactTable, { MRT_ColumnDef } from 'material-react-table';
 
+import TResidentRecord from './types/TResidentRecord';
 
 //Mui Icons
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { AccountCircle, Send } from '@mui/icons-material';
 import SmsIcon from '@mui/icons-material/Sms';
+import PrintIcon from '@mui/icons-material/Print';
 
 import { 
     Box,
@@ -19,115 +21,126 @@ import {
     ListItemIcon,
  } from '@mui/material'
 
-type Person = {
-  uid: string,
-  name: {
-    firstName: string;
-    lastName: string;
-    middleName: string;
-    extName: string | null;
-  };
-  gender: string;
-  maritalStatus: string,
-  avatar: string | null,
-  email: string | null,
-  cpNumber: string | null,
-  telNumber: string | null
-};
+
 
 //nested data is ok, see accessorKeys in ColumnDef below
-const data: Person[] = [
-  {
-    uid: '1234',
-    name: {
-      firstName: 'John',
-      lastName: 'Doe',
-      middleName: 'Duggong',
-      extName: 'jr',
-    },
-    gender: 'male',
-    maritalStatus: 'single',
-    avatar: '/assets/images/avatar/apple.png',
-    email: 'www.apple@gmail',
-    cpNumber: null,
-    telNumber: '123',
-  },
-  {
-    uid: '12345',
-    name: {
-      firstName: 'Jane',
-      lastName: 'Doe',
-      middleName: 'Muryot',
-      extName: null,
-    },
-    gender: 'female',
-    maritalStatus: 'single',
-    avatar: null,
-    email: null,
-    cpNumber: '09128486021',
-    telNumber: '12455'
-  },
-  {
-    uid: '12346',
-    name: {
-      firstName: 'Joe',
-      lastName: 'Doe',
-      middleName: 'Anglit',
-      extName: null,
-    },
-    gender: 'male',
-    maritalStatus: 'single',
-    avatar: null,
-    email: null,
-    cpNumber: '09125666988',
-    telNumber: null
-  },
-  {
-    uid: '1237',
-    name: {
-      firstName: 'Kevin',
-      lastName: 'Vandy',
-      middleName: 'Pingol',
-      extName: "sr",
-    },
-    gender: 'male',
-    maritalStatus: 'married',
-    avatar: '/assets/images/avatar/apple.png',
-    email: 'mark@gmail.com',
-    cpNumber: '09125666988',
-    telNumber: null
-  },
-  {
-    uid: '123469',
-    name: {
-      firstName: 'Joshua',
-      lastName: 'Rolluffs',
-      middleName: 'Ampyong',
-      extName: null,
-    },
-    gender: 'male',
-    maritalStatus: 'married',
-    avatar: '/assets/images/avatar/apple.png',
-    email: 'www.savrela@gmail',
-    cpNumber: null,
-    telNumber: null
-  },
-];
+// const data: TResidentRecord[] = [
+//   {
+//     residentUID: '1234',
+//     gender: 'male',
+//     maritalStatus: 'single',
+//     dateOfBirth: "1998-03-08",
+//     picture: '/assets/images/avatar/apple.png',
+//     name: {
+//       firstName: 'John',
+//       lastName: 'Doe',
+//       middleName: 'Duggong',
+//       extName: 'jr',
+//     },
+//     currentAddress: "dfksdfsdoifjksdopkfposdf",
+//     permanentAddress: "sdfgetergtoekr dfgdfgg",
+//     homeContactInfo: {
+//       homeCPNumber: "093238877320",
+//       homeEmail: "www.homesds@gkdfg",
+//       homeTelNumber: "0988-49933"
+//     },
+//     personalContactInfo: {
+//       personalCPNumber: "091279er345",
+//       personalEmail: "www.mosdifsd",
+//       personalTelNumber: "09764=3234"
+//     }
+//   },
+//   {
+//     residentUID: '1234',
+//     gender: 'male',
+//     maritalStatus: 'single',
+//     dateOfBirth: "1998-03-08",
+//     picture: '/assets/images/avatar/apple.png',
+//     name: {
+//       firstName: 'John',
+//       lastName: 'Doe',
+//       middleName: 'Duggong',
+//       extName: 'jr',
+//     },
+//     currentAddress: "dfksdfsdoifjksdopkfposdf",
+//     permanentAddress: "sdfgetergtoekr dfgdfgg",
+//     homeContactInfo: {
+//       homeCPNumber: "093238877320",
+//       homeEmail: "www.homesds@gkdfg",
+//       homeTelNumber: "0988-49933"
+//     },
+//     personalContactInfo: {
+//       personalCPNumber: "091279er345",
+//       personalEmail: "www.mosdifsd",
+//       personalTelNumber: "09764=3234"
+//     }
+//   },
+//   {
+//     residentUID: '1234',
+//     gender: 'male',
+//     maritalStatus: 'single',
+//     dateOfBirth: "1998-03-08",
+//     picture: '/assets/images/avatar/apple.png',
+//     name: {
+//       firstName: 'John',
+//       lastName: 'Doe',
+//       middleName: 'Duggong',
+//       extName: 'jr',
+//     },
+//     currentAddress: "dfksdfsdoifjksdopkfposdf",
+//     permanentAddress: "sdfgetergtoekr dfgdfgg",
+//     homeContactInfo: {
+//       homeCPNumber: "093238877320",
+//       homeEmail: "www.homesds@gkdfg",
+//       homeTelNumber: "0988-49933"
+//     },
+//     personalContactInfo: {
+//       personalCPNumber: "091279er345",
+//       personalEmail: "www.mosdifsd",
+//       personalTelNumber: "09764=3234"
+//     }
+//   },
+//   {
+//     residentUID: '1234',
+//     gender: 'male',
+//     maritalStatus: 'single',
+//     dateOfBirth: "1998-03-08",
+//     picture: '/assets/images/avatar/apple.png',
+//     name: {
+//       firstName: 'John',
+//       lastName: 'Doe',
+//       middleName: 'Duggong',
+//       extName: 'jr',
+//     },
+//     currentAddress: "dfksdfsdoifjksdopkfposdf",
+//     permanentAddress: "sdfgetergtoekr dfgdfgg",
+//     homeContactInfo: {
+//       homeCPNumber: "093238877320",
+//       homeEmail: "www.homesds@gkdfg",
+//       homeTelNumber: "0988-49933"
+//     },
+//     personalContactInfo: {
+//       personalCPNumber: "091279er345",
+//       personalEmail: "www.mosdifsd",
+//       personalTelNumber: "09764=3234"
+//     }
+//   }
+// ];
 
-const ResidentsTable: FC = () => {
+const ResidentsTable: FC<{residents: TResidentRecord[]}> = ({residents}) => {
   const navigation = useNavigate();
   const [rowSelection, setRowSelection] = React.useState({});
   //should be memoized or stable
-  const columns = useMemo<MRT_ColumnDef<Person>[]>(
+  const columns = useMemo<MRT_ColumnDef<TResidentRecord>[]>(
     () => [
       {
         enableColumnActions: false,
         enableGlobalFilter: false,
         enableColumnFilter: false,
         enableSorting: false,
-        accessorFn: (row) => `${row.avatar}`, //access nested data with dot notation
-        id: 'avatar',
-        header: 'Avatar',
+        accessorFn: (row) => `${row.picture}`, //access nested data with dot notation
+        id: 'picture',
+        header: 'Picture',
         size: 20,
         Cell: ({ renderedCellValue, row }) => (
             <Box
@@ -137,7 +150,7 @@ const ResidentsTable: FC = () => {
                 gap: '1rem',
               }}
             >
-              <Avatar src={row.original.avatar? row.original.avatar : undefined} alt={row.original.name.firstName} />
+              <Avatar src={row.original.picture? row.original.picture : undefined} alt={row.original.name.firstName} />
               {/* using renderedCellValue instead of cell.getValue() preserves filter match highlighting */}
             </Box>
           ),
@@ -147,28 +160,20 @@ const ResidentsTable: FC = () => {
         header: 'First Name',
       },
       {
-        accessorKey: 'name.lastName',
-        header: 'Last Name',
-      },
-      {
         accessorKey: 'name.middleName', //normal accessorKey
         header: 'Middle Name',
+      },
+      {
+        accessorKey: 'name.lastName',
+        header: 'Last Name',
       },
       {
         accessorKey: 'name.extName',
         header: 'Ext. Name',
       },
       {
-        accessorKey: 'email',
-        header: 'Email'
-      },
-      {
-        accessorKey: 'cpNumber',
-        header: 'CP Number'
-      },
-      {
-        accessorKey: 'telNumber',
-        header: 'Tel Number'
+        accessorKey: 'dateOfBirth',
+        header: 'Date of Birth',
       },
       {
         accessorKey: 'gender',
@@ -177,6 +182,38 @@ const ResidentsTable: FC = () => {
       {
         accessorKey: 'maritalStatus',
         header: 'Marital Status',
+      },
+      {
+        accessorKey: 'personalContactInfo.personalEmail',
+        header: 'Personal Email'
+      },
+      {
+        accessorKey: 'personalContactInfo.personalCPNumber',
+        header: 'Personal CP Number'
+      },
+      {
+        accessorKey: 'personalContactInfo.personalTelNumber',
+        header: 'Personal Tel Number'
+      },
+      {
+        accessorKey: 'homeContactInfo.homeEmail',
+        header: 'Home Email'
+      },
+      {
+        accessorKey: 'homeContactInfo.homeCPNumber',
+        header: 'Home CP Number'
+      },
+      {
+        accessorKey: 'homeContactInfo.homeTelNumber',
+        header: 'Home Tel Number'
+      },
+      {
+        accessorKey: 'permanentAddress',
+        header: 'Permanent Address'
+      },
+      {
+        accessorKey: 'currentAddress',
+        header: 'Current Address'
       },
     ],
     [],
@@ -188,9 +225,9 @@ const ResidentsTable: FC = () => {
   return (
     <MaterialReactTable 
     columns={columns} 
-    data={data} 
-    enableRowSelection
-    getRowId={(row) => row.uid}
+    data={residents} 
+    // enableRowSelection
+    getRowId={(row) => row.residentUID}
     onRowSelectionChange={setRowSelection}
     state={{ rowSelection }}
     positionToolbarAlertBanner="bottom"
@@ -207,7 +244,7 @@ const ResidentsTable: FC = () => {
         >
           Add Recident
         </Button>
-        <Divider orientation='vertical' variant='middle' flexItem />
+        {/* <Divider orientation='vertical' variant='middle' flexItem />
         <IconButton 
         size="small"
         aria-label="delete" 
@@ -230,7 +267,7 @@ const ResidentsTable: FC = () => {
         }}
         sx={{width: '35px', height: '35px'}}>
           <EditIcon fontSize="small" />
-        </IconButton>
+        </IconButton> */}
       </Box>
     )}
 
@@ -274,6 +311,7 @@ const ResidentsTable: FC = () => {
         <MenuItem
           key={0}
           onClick={() => {
+            navigation(`view/${row.original.residentUID}`)
             // View profile logic...
             closeMenu();
           }}
@@ -287,6 +325,7 @@ const ResidentsTable: FC = () => {
         <MenuItem
         key={1}
         onClick={() => {
+          navigation(`edit/${row.original.residentUID}`)
           // View profile logic...
           closeMenu();
         }}
@@ -317,7 +356,7 @@ const ResidentsTable: FC = () => {
             closeMenu();
           }}
           sx={{ m: 0 }}
-          disabled={!row.original.email}
+          disabled={!(row.original.personalContactInfo.personalEmail || row.original.homeContactInfo.homeEmail)}
         >
           <ListItemIcon>
             <Send />
@@ -331,12 +370,11 @@ const ResidentsTable: FC = () => {
           closeMenu();
         }}
         sx={{ m: 0 }}
-        disabled={!row.original.cpNumber}
       >
         <ListItemIcon>
-          <SmsIcon />
+          <PrintIcon />
         </ListItemIcon>
-        Send SMS
+        Print Document
       </MenuItem>,
       ]}
     />

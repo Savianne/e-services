@@ -25,6 +25,7 @@ function usePhilippinePlacesPickerSelect(
     const [regionCode, setRegionCode] = React.useState<string |null>(null);
     const [provinceCode, setProvinceCode] = React.useState<string |null>(null);
     const [cityMunCode, setCityMunCode] = React.useState<string |null>(null);
+    const [regions, updateRegions] = React.useState<null | typeof philippinePlaces.regions>(null)
     const [region, setRegion] = React.useState<string | null>(null);
     const [province, setProvince] = React.useState<string | null>(null);
     const [cityMun, setCityMun] = React.useState<string | null>(null);
@@ -50,6 +51,8 @@ function usePhilippinePlacesPickerSelect(
         }
 
         if(region == null) {
+            setRegionCode(null);
+            updateRegions(null)
             regionDispatcher(null);
         }
 
@@ -96,25 +99,12 @@ function usePhilippinePlacesPickerSelect(
         barangayDispatcher(barangay)
     }, [barangay]);
 
-    // interface retVal {
-    //     regions: typeof philippinePlaces.regions | null,
-    //     provinces: typeof philippinePlaces.provinces | null,
-    //     cityMun: typeof philippinePlaces.city_mun | null,
-    //     barangay: typeof philippinePlaces.barangays | null,
-    //     setRegion: typeof setRegion | null,
-    //     setProvince: typeof setProvince | null,
-    //     setCityMun: typeof setCityMun | null,
-    //     setBarangay: typeof setBarangay | null,
-    //     values: {
-    //         region: typeof region,
-    //         province: typeof province,
-    //         cityMun: typeof cityMun,
-    //         barangay: typeof barangay
-    //     }
-    // }
+    React.useEffect(() => {
+        if(!region) updateRegions(philippinePlaces.regions);
+    }, [regions]);
 
     return {
-        regions: philippinePlaces.regions,
+        regions,
         provinces: regionCode? philippinePlaces.getProvincesByRegion(regionCode) : null,
         cityMun: provinceCode? philippinePlaces.getCityMunByProvince(provinceCode) : null,
         barangay: cityMunCode? philippinePlaces.getBarangayByMun(cityMunCode) : null,

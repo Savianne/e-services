@@ -10,7 +10,7 @@ const FCSystemLogo: React.FC<IStyledFC> = ({className}) => {
 
     return (
         <div className={className}>
-            <img className="logo" src="assets/images/favlogo.png" /> 
+            <img className="logo" src="/logo.png" /> 
         </div>
     )
 }
@@ -24,8 +24,8 @@ const SystemLogo = styled(FCSystemLogo)`
 
     & .logo {
         display: inline-block;
-        height: 50px;
-        width: 50px;
+        height: 80px;
+        /* width: 90px; */
     }
 `;
 

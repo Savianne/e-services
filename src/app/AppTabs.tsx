@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 const FCAppTabs: React.FC<IStyledFC> = ({className}) => {
-    const [value, setValue] = React.useState('home');
+    const [value, setValue] = React.useState('');
 
     const navigate = useNavigate();
 
@@ -22,16 +22,16 @@ const FCAppTabs: React.FC<IStyledFC> = ({className}) => {
     React.useEffect(() => {
         switch(value) {
             case 'home':
-                navigate('home');
+                navigate('/admin/home');
             break;
             case 'information':
-                navigate('information');
+                navigate('/admin/information');
             break;
             case 'e-services':
-                navigate('e-services');
+                navigate('/admin/e-services');
             break;
-            default:
-                navigate('home');
+            // default:
+            //     navigate('/home');
             break;
         }
     }, [value]);
@@ -59,7 +59,7 @@ const FCAppTabs: React.FC<IStyledFC> = ({className}) => {
 
 const AppTabs = styled(FCAppTabs)`
     position: sticky;
-    top: 65px;
+    /* top: 95px; */
     display: flex;
     flex: 0 1 100%;
     height: fit-content;
@@ -67,7 +67,7 @@ const AppTabs = styled(FCAppTabs)`
     background-color: ${(props) => props.theme.customTheme.mainBackground};
     border-bottom: 1px solid ${(props) => props.theme.customTheme.borderColor};
     backdrop-filter: blur(30px);
-    z-index: 1000;
+    /* z-index: 1000; */
    
     & .tabs {
         display: flex;

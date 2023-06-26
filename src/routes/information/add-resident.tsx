@@ -4,6 +4,9 @@ import { IStyledFC } from "../../app/IStyledFC";
 
 import SiteMapBoard from "../../app/SiteMapBoard";
 
+//Input Validators
+import validatePHNumber from "../../utils/inputValidators/validators/validatePHNumber";
+import validatePHTelephone from "../../utils/inputValidators/validators/validatePHTelNumber";
 //Mui Icons
 
 //MUI Component
@@ -14,7 +17,8 @@ import {
     Paper,
     FormControlLabel,
     Checkbox,
-    Button
+    Button,
+    CircularProgress,
 } from '@mui/material';
 
 //Date Picker Component
@@ -22,10 +26,21 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { Container, Content } from "../../app/AppLayout";
 
+//Helpers
+import { formatPhoneNumber } from "../../utils/hooks/usePHTelNumberFormat";
+import { formatToPHCPNumberValue } from "../../utils/hooks/usePHCPNumberFormat";
+
 //Custom Hooks
 import useFormControl from "../../utils/hooks/useFormControl";
+import usePHTelNumberFormat from "../../utils/hooks/usePHTelNumberFormat";
+import usePHCPNumberFormat from "../../utils/hooks/usePHCPNumberFormat";
+
 import usePhilippinePlacesPickerSelect, { optionValue } from "../../utils/hooks/usePhilippinePlacePickerSelect";
+
 // import { usePlacePickerSelect, optionValue, getValue, getCode } from "../../utils/hooks/usePhilippinePlacesPicker";
+
+import { TResidentRecord } from "../../API/addResidentRecord";
+import useAddResidentRecord from "../../API/hooks/useAddResidentRecord";
 
 const AddResidentFormControl = styled(Paper)`
     display: flex;
@@ -64,12 +79,18 @@ const AddResidentFormSubmitButton = styled(Button)`
 `;
 
 const AddResident: React.FC = () => {
+    const {addResidenRecord, isError, isLoading, isUpdating, error} = useAddResidentRecord();
+    const [cpNumber, setCpNumber] = usePHCPNumberFormat();
+    const [telNumber, setTelNumber] = usePHTelNumberFormat();
+    const [homeCpNumber, setHomeCpNumber] = usePHCPNumberFormat();
+    const [homeTelNumber, setHomeTelNumber] = usePHTelNumberFormat();
+    const [isSeniorCitizenMember, setIsSeniorCitizenMember] =  React.useState(false);
     const [formIsReadyState, updateFormIsReadyState] = React.useState(false);
     const [form, formDispatcher] = useFormControl({
         firstName: {
             required: true,
-            minValLen: 3,
-            maxValLen: 15,
+            minValLen: 5,
+            maxValLen: 25,
             errorText: 'Invalid Entry',
             validateAs: 'text',
         },
@@ -78,14 +99,14 @@ const AddResident: React.FC = () => {
             errorText: 'Invalid Entry',
             validateAs: 'text',
             minValLen: 5,
-            maxValLen: 6,
+            maxValLen: 25,
         },
         surName: {
             required: true,
             errorText: 'Invalid Entry',
             validateAs: 'text',
             minValLen: 5,
-            maxValLen: 6,
+            maxValLen: 25,
         },
         extName: {
             required: false,
@@ -96,8 +117,8 @@ const AddResident: React.FC = () => {
         dateOfBirth: {
             required: true,
             errorText: 'Invalid Date',
-            min: '1998-08-03',
-            max: '1999-08-03',
+            min: '1920-01-01',
+            max: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`,
             validateAs: 'date',
         },
         gender: {
@@ -118,14 +139,16 @@ const AddResident: React.FC = () => {
             validateAs: 'email',
         },
         cpNumber: {
-            required: true,
+            required: false,
             validateAs: 'number',
             errorText: 'Invalid Value',
+            validators: [validatePHNumber]
         },
         telNumber: {
             required: false,
             validateAs: 'number',
             errorText: 'Invalid Value',
+            validators: [validatePHTelephone]
         },
         region: {
             required: true,
@@ -153,6 +176,26 @@ const AddResident: React.FC = () => {
             validateAs: 'select',
             validValues: ['1', '2', '3', '4', '5', '6']
         }});
+
+    const [homeContactInfoForm, homeContactInfoFormDispatchers] = useFormControl({
+        email: {
+            required: false,
+            errorText: 'Invalid Entry',
+            validateAs: 'email'
+        },
+        cpNumber: {
+            required: false,
+            errorText: 'Invalid Entry',
+            validateAs: "number",
+            validators: [validatePHNumber]
+        },
+        telephoneNumber: {
+            required: false,
+            errorText: 'Invalid Entry',
+            validateAs: "number",
+            validators: [validatePHTelephone]
+        },
+    })
 
     const [currentAddressForm, currentAddressFormValueDispatcher] = useFormControl({
         region: {
@@ -183,7 +226,7 @@ const AddResident: React.FC = () => {
         }
     });
 
-    const [sameAsPermanentAddress, updateSameAsPermanentAddress] = React.useState(true);
+    const [sameAsPermanentAddress, updateSameAsPermanentAddress] = React.useState(false);
 
     const permanentAddress = usePhilippinePlacesPickerSelect(
         (region) => formDispatcher?.region(region),
@@ -200,20 +243,35 @@ const AddResident: React.FC = () => {
     );
 
     React.useEffect(() => {
-        console.log(form.values);
-        console.log(permanentAddress.values);
-        console.log(form.errors)
-    },[form.values, permanentAddress.values, form.errors]);
-
-    React.useEffect(() => {
-        if((form.isReady && sameAsPermanentAddress) || (form.isReady && (!(sameAsPermanentAddress) && currentAddressForm.isReady))) {
+        const personalInfoReady =  form.isReady;
+        const currentAddressIsReady = sameAsPermanentAddress? true : currentAddressForm.isReady;
+        const homeContactInfoReady = homeContactInfoForm.isReady;
+        if(personalInfoReady && currentAddressIsReady && homeContactInfoReady) {
             updateFormIsReadyState(true)
         } else updateFormIsReadyState(false)
-    }, [form.isReady, currentAddressForm.isReady, sameAsPermanentAddress])
+    }, [
+        form.isReady, 
+        currentAddressForm.isReady, 
+        homeContactInfoForm.isReady,
+        sameAsPermanentAddress,
+    ])
+
 
     React.useEffect(() => {
-        console.log(form.isReady)
-    }, [form])
+        formDispatcher?.cpNumber(cpNumber)
+    }, [cpNumber]);
+
+    React.useEffect(() => {
+        formDispatcher?.telNumber(telNumber)
+    }, [telNumber])
+
+    React.useEffect(() => {
+        homeContactInfoFormDispatchers?.cpNumber(homeCpNumber)
+    }, [homeCpNumber]);
+
+    React.useEffect(() => {
+        homeContactInfoFormDispatchers?.telephoneNumber(homeTelNumber)
+    }, [homeTelNumber])
     return (
         <>
             <SiteMapBoard title="Add Resident" path="/information / residents / add-resident" />
@@ -229,6 +287,7 @@ const AddResident: React.FC = () => {
                             required
                             error={form.errors.firstName? true : false}
                             helperText={form.errors.firstName?.errorText}
+                            value={form.values.firstName || ""}
                             onChange={(e) => formDispatcher?.firstName(e.currentTarget.value as string)}
                             id="outlined-required"
                             label="First Name"
@@ -238,6 +297,7 @@ const AddResident: React.FC = () => {
                             required
                             error={form.errors.middleName? true : false}
                             helperText={form.errors.middleName?.errorText}
+                            value={form.values.middleName || ""}
                             onChange={(e) => formDispatcher?.middleName(e.currentTarget.value as string)}
                             id="outlined-required"
                             label="Middle Name"
@@ -247,6 +307,7 @@ const AddResident: React.FC = () => {
                             required
                             error={form.errors.surName? true : false}
                             helperText={form.errors.surName?.errorText}
+                            value={form.values.surName || ""}
                             onChange={(e) => formDispatcher?.surName(e.currentTarget.value as string)}
                             id="outlined-required"
                             label="Surname"
@@ -256,6 +317,7 @@ const AddResident: React.FC = () => {
                             select
                             error={form.errors.extName? true : false}
                             helperText={form.errors.extName?.errorText}
+                            value={form.values.extName || ""}
                             onChange={(e) => formDispatcher?.extName(e.target.value)}
                             id="outlined-required"
                             label="Ext. Name"
@@ -281,6 +343,7 @@ const AddResident: React.FC = () => {
                                 required
                                 error={form.errors.gender? true : false}
                                 helperText={form.errors.gender?.errorText}
+                                value={form.values.gender || ""}
                                 onChange={(e) => formDispatcher?.gender(e.target.value as string)}
                                 id="outlined-required"
                                 label="Gender"
@@ -296,6 +359,7 @@ const AddResident: React.FC = () => {
                                 required
                                 error={form.errors.maritalStatus? true : false}
                                 helperText={form.errors.maritalStatus?.errorText}
+                                value={form.values.maritalStatus || ""}
                                 onChange={(e) => formDispatcher?.maritalStatus(e.target.value as string)}
                                 id="outlined-required"
                                 label="Marital Status"
@@ -308,22 +372,25 @@ const AddResident: React.FC = () => {
                                     <MenuItem value="separated">Separated</MenuItem>
                                 </InputField>
                             </DataGroup>
-                            <h2 className="data-title">Contact Information</h2>
+                            <h2 className="data-title">Contact Information (Personal)</h2>
                             <DataGroup>
                                 <InputField
                                 type="email"
                                 error={form.errors.emailAddress? true : false}
                                 helperText={form.errors.emailAddress?.errorText}
+                                value={form.values.emailAddress || ""}
                                 onChange={(e) => formDispatcher?.emailAddress(e.target.value as string)}
                                 id="outlined-required"
                                 label="Email Address"
                                 size="small" />
                                 <InputField
-                                type="number"
+                                type="tel"
                                 required
                                 error={form.errors.cpNumber? true : false}
                                 helperText={form.errors.cpNumber?.errorText}
-                                onChange={(e) => formDispatcher?.cpNumber(e.target.value)}
+                                // onChange={(e) => formDispatcher?.cpNumber(e.target.value)}
+                                value={cpNumber}
+                                onChange={(e) => setCpNumber(e.target.value)}
                                 id="outlined-required"
                                 label="CP Number"
                                 size="small" />
@@ -331,7 +398,42 @@ const AddResident: React.FC = () => {
                                 type="tel"
                                 error={form.errors.telNumber? true : false}
                                 helperText={form.errors.telNumber?.errorText}
-                                onChange={(e) => formDispatcher?.telNumber(e.target.value)}
+                                value={telNumber}
+                                onChange={(e) => setTelNumber(e.target.value)}
+                                // onChange={(e) => formDispatcher?.telNumber(e.target.value)}
+                                id="outlined-required"
+                                label="Tel Number"
+                                size="small" />
+                            </DataGroup>
+                            <h2 className="data-title">Contact Information (Home)</h2>
+                            <DataGroup>
+                                <InputField
+                                type="email"
+                                error={homeContactInfoForm.errors.email? true : false}
+                                helperText={homeContactInfoForm.errors.email?.errorText}
+                                value={homeContactInfoForm.values.email || ""}
+                                onChange={(e) => homeContactInfoFormDispatchers?.email(e.target.value as string)}
+                                id="outlined-required"
+                                label="Email Address"
+                                size="small" />
+                                <InputField
+                                type="tel"
+                                required
+                                error={homeContactInfoForm.errors.cpNumber? true : false}
+                                helperText={homeContactInfoForm.errors.cpNumber?.errorText}
+                                // onChange={(e) => formDispatcher?.cpNumber(e.target.value)}
+                                value={homeCpNumber}
+                                onChange={(e) => setHomeCpNumber(e.target.value)}
+                                id="outlined-required"
+                                label="CP Number"
+                                size="small" />
+                                <InputField
+                                type="tel"
+                                error={homeContactInfoForm.errors.telephoneNumber? true : false}
+                                helperText={homeContactInfoForm.errors.telephoneNumber?.errorText}
+                                value={homeTelNumber}
+                                onChange={(e) => setHomeTelNumber(e.target.value)}
+                                // onChange={(e) => formDispatcher?.telNumber(e.target.value)}
                                 id="outlined-required"
                                 label="Tel Number"
                                 size="small" />
@@ -343,7 +445,7 @@ const AddResident: React.FC = () => {
                                 required
                                 error={form.errors.region? true : false}
                                 helperText={form.errors.region?.errorText}
-                                value={ permanentAddress.values.region}
+                                value={ permanentAddress.values.region || "" }
                                 onChange={(e) => { 
                                     permanentAddress.setRegion(e.target.value)
                                 }}
@@ -352,7 +454,7 @@ const AddResident: React.FC = () => {
                                 size="small">
                                     <MenuItem value=''>No Value</MenuItem>
                                     {
-                                        permanentAddress.regions.map(item => (
+                                        permanentAddress.regions?.map(item => (
                                             <MenuItem value={optionValue(item.reg_code, item.name)}>{item.name}</MenuItem>
                                         ))
                                     }
@@ -360,7 +462,7 @@ const AddResident: React.FC = () => {
                                 <InputField
                                 select
                                 required
-                                value={permanentAddress.values.province}
+                                value={permanentAddress.values.province || ""}
                                 disabled={!permanentAddress.values.region}
                                 error={form.errors.province? true : false}
                                 helperText={form.errors.province?.errorText}
@@ -380,7 +482,7 @@ const AddResident: React.FC = () => {
                                 <InputField
                                 select
                                 required
-                                value={permanentAddress.values.cityMun}
+                                value={permanentAddress.values.cityMun || ""}
                                 disabled={!permanentAddress.values.province}
                                 error={form.errors.cityOrMunicipality? true : false}
                                 helperText={form.errors.cityOrMunicipality?.errorText}
@@ -400,7 +502,7 @@ const AddResident: React.FC = () => {
                                 <InputField
                                 select
                                 required
-                                value={ permanentAddress.values.barangay }
+                                value={ permanentAddress.values.barangay || "" }
                                 disabled={!permanentAddress.values.cityMun}
                                 error={form.errors.barangay? true : false}
                                 helperText={form.errors.barangay?.errorText}
@@ -419,7 +521,7 @@ const AddResident: React.FC = () => {
                                 sx={{minWidth: '50px'}}
                                 select
                                 required
-                                value={form.values.zone == null? "" : form.values.zone}
+                                value={form.values.zone || ""}
                                 error={form.errors.zone? true : false}
                                 helperText={form.errors.zone?.errorText}
                                 onChange={(e) => formDispatcher?.zone(e.target.value)}
@@ -435,12 +537,13 @@ const AddResident: React.FC = () => {
                                 <MenuItem value='6'>6</MenuItem>
                             </InputField>
                         </DataGroup>
-                        <h2 className="data-title">Current Address</h2> <FormControlLabel sx={{marginLeft: '10px'}} 
-                        control={
-                            <Checkbox 
-                            checked={sameAsPermanentAddress} 
-                            onChange={(e) => updateSameAsPermanentAddress(e.target.checked)}/>
-                        } label="Same as Permanent Address" />
+                        <h2 className="data-title">Current Address</h2> 
+                        <FormControlLabel sx={{marginLeft: '10px'}} 
+                            control={
+                                <Checkbox 
+                                checked={sameAsPermanentAddress} 
+                                onChange={(e) => updateSameAsPermanentAddress(e.target.checked)}/>
+                            } label="Same as Permanent Address" />
                         <DataGroup>
                         {
                             sameAsPermanentAddress? <>
@@ -450,7 +553,7 @@ const AddResident: React.FC = () => {
                                 disabled
                                 error={form.errors.region? true : false}
                                 helperText={form.errors.region?.errorText}
-                                value={ permanentAddress.values.region}
+                                value={ permanentAddress.values.region }
                                 onChange={(e) => { 
                                     permanentAddress.setRegion(e.target.value)
                                 }}
@@ -459,7 +562,7 @@ const AddResident: React.FC = () => {
                                 size="small">
                                     <MenuItem value=''>No Value</MenuItem>
                                     {
-                                        permanentAddress.regions.map(item => (
+                                        permanentAddress.regions?.map(item => (
                                             <MenuItem value={optionValue(item.reg_code, item.name)}>{item.name}</MenuItem>
                                         ))
                                     }
@@ -527,7 +630,7 @@ const AddResident: React.FC = () => {
                                 select
                                 required
                                 disabled
-                                value={form.values.zone == null? "" : form.values.zone}
+                                value={form.values.zone || ""}
                                 error={form.errors.zone? true : false}
                                 helperText={form.errors.zone?.errorText}
                                 onChange={(e) => formDispatcher?.zone(e.target.value)}
@@ -548,7 +651,7 @@ const AddResident: React.FC = () => {
                                 required
                                 error={currentAddressForm.errors.region? true : false}
                                 helperText={currentAddressForm.errors.region?.errorText}
-                                value={ currentAddress.values.region}
+                                value={ currentAddress.values.region || ""}
                                 onChange={(e) => { 
                                     currentAddress.setRegion(e.target.value)
                                 }}
@@ -557,7 +660,7 @@ const AddResident: React.FC = () => {
                                 size="small">
                                     <MenuItem value=''>No Value</MenuItem>
                                     {
-                                        currentAddress.regions.map(item => (
+                                        currentAddress.regions?.map(item => (
                                             <MenuItem value={optionValue(item.reg_code, item.name)}>{item.name}</MenuItem>
                                         ))
                                     }
@@ -566,7 +669,7 @@ const AddResident: React.FC = () => {
                                 select
                                 required
                                 disabled={!currentAddress.values.region}
-                                value={currentAddress.values.province}
+                                value={currentAddress.values.province || ""}
                                 error={currentAddressForm.errors.province? true : false}
                                 helperText={currentAddressForm.errors.province?.errorText}
                                 onChange={(e) => {
@@ -586,7 +689,7 @@ const AddResident: React.FC = () => {
                                 select
                                 required
                                 disabled={!currentAddress.values.province}
-                                value={currentAddress.values.cityMun}
+                                value={currentAddress.values.cityMun || ""}
                                 error={currentAddressForm.errors.cityOrMunicipality? true : false}
                                 helperText={currentAddressForm.errors.cityOrMunicipality?.errorText}
                                 onChange={(e) => {
@@ -606,7 +709,7 @@ const AddResident: React.FC = () => {
                                 select
                                 required
                                 disabled={!currentAddress.values.cityMun}
-                                value={ currentAddress.values.barangay }
+                                value={ currentAddress.values.barangay || "" }
                                 error={currentAddressForm.errors.barangay? true : false}
                                 helperText={currentAddressForm.errors.barangay?.errorText}
                                 onChange={(e) => currentAddress.setBarangay(e.target.value)}
@@ -624,7 +727,7 @@ const AddResident: React.FC = () => {
                                 sx={{minWidth: '50px'}}
                                 select
                                 required
-                                value={currentAddressForm.values.zone == null? "" : currentAddressForm.values.zone}
+                                value={currentAddressForm.values.zone || ""}
                                 error={currentAddressForm.errors.zone? true : false}
                                 helperText={currentAddressForm.errors.zone?.errorText}
                                 onChange={(e) => currentAddressFormValueDispatcher?.zone(e.target.value)}
@@ -642,7 +745,76 @@ const AddResident: React.FC = () => {
                             </>
                         }
                         </DataGroup>
-                        <AddResidentFormSubmitButton variant="contained" disabled={!formIsReadyState}>Submit</AddResidentFormSubmitButton>
+                        <h2 className="data-title">Barangay Senior Citizens Association</h2> 
+                        <DataGroup>
+                            <FormControlLabel sx={{marginLeft: '10px'}} 
+                            control={
+                                <Checkbox 
+                                checked={isSeniorCitizenMember} 
+                                onChange={(e) => setIsSeniorCitizenMember(e.target.checked)}/>
+                            } label="Barangay Senior Citizens Association member?" />
+                        </DataGroup>
+                        <Button onClick={() => {
+                            form.clear();
+                            homeContactInfoForm.clear()
+                            permanentAddress.setRegion(null);
+                            currentAddress.setRegion(null);
+                            setCpNumber("");
+                            setHomeCpNumber("");
+                            setTelNumber("");
+                            setHomeTelNumber("");
+                        }}>Clear form</Button>
+                        <AddResidentFormSubmitButton 
+                        endIcon={isLoading? <CircularProgress size={20} color="inherit" /> : null}
+                        variant="contained" 
+                        disabled={!formIsReadyState}
+                        onClick={() => {
+                            const residenRecord: TResidentRecord = {
+                                personalInformation: {
+                                    firstName: form.values.firstName as string,
+                                    surName: form.values.surName as string,
+                                    middleName: form.values.middleName as string,
+                                    extName: form.values.extName as string | null,
+                                    gender: form.values.gender as string,
+                                    dateOfBirth: `${new Date(form.values.dateOfBirth as string).getFullYear()}-${new Date(form.values.dateOfBirth as string).getMonth() + 1}-${new Date(form.values.dateOfBirth as string).getDate()}` as string,
+                                    maritalStatus: form.values.maritalStatus as string
+                                },
+                                contactInformation: {
+                                    cpNumber: form.values.cpNumber as string | null,
+                                    email: form.values.emailAddress as string | null,
+                                    telephoneNumber: form.values.telNumber as string | null
+                                },
+                                homeContactInformation: {
+                                    cpNumber: homeContactInfoForm.values.cpNumber as string | null,
+                                    email: homeContactInfoForm.values.email as string | null,
+                                    telephoneNumber: homeContactInfoForm.values.telephoneNumber as string | null
+                                },
+                                permanentAddress: {
+                                    region: form.values.region as string,
+                                    province: form.values.province as string,
+                                    cityOrMunicipality: form.values.cityOrMunicipality as string,
+                                    barangay: form.values.barangay as string,
+                                    zone: form.values.zone as string
+                                },
+                                currentAddress: sameAsPermanentAddress? {
+                                    region: form.values.region as string,
+                                    province: form.values.province as string,
+                                    cityOrMunicipality: form.values.cityOrMunicipality as string,
+                                    barangay: form.values.barangay as string,
+                                    zone: form.values.zone as string
+                                } : {
+                                    region: form.values.region as string,
+                                    province: form.values.province as string,
+                                    cityOrMunicipality: form.values.cityOrMunicipality as string,
+                                    barangay: form.values.barangay as string,
+                                    zone: form.values.zone as string
+                                },
+                                senior_citizen: isSeniorCitizenMember,
+                            }
+
+                            addResidenRecord(residenRecord, () => alert("success"));
+
+                        }}>Submit</AddResidentFormSubmitButton>
                     </AddResidentFormControl>
                 </Content>
             </Container>

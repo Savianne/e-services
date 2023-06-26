@@ -61,99 +61,6 @@ const OrganizationalChartContainer = styled(Box)`
 
 
 const Home: React.FC = () => {
-  const organizationOfBarangay:IBrgyOrgChart = {
-    term: "2018-2021",
-    punongBarangay: {
-      name: 'Apple Jane De Guzman',
-      role: 'Punong Barangay',
-      avatar: "assets/images/avatar/apple.png"
-    },
-    secretary: {
-      name: 'Danielle R. Bacabitas',
-      role: 'Brgy. Secretary',
-      avatar: "assets/images/avatar/apple.png"
-    },
-    treasurer: {
-      name: 'Danica Santos-Esteban',
-      role: 'Brgy. Treasurer',
-      avatar: "assets/images/avatar/apple.png"
-    },
-    kagawad: [{
-      name: 'Greggy B. Leal',
-      role: 'Brgy. 1st Kagawad',
-      avatar: "assets/images/avatar/apple.png"
-    },{
-      name: 'Greggy B. Leal',
-      role: 'Brgy. Kagawad',
-      avatar: "assets/images/avatar/apple.png"
-    },{
-      name: 'Greggy B. Leal',
-      role: 'Brgy. Kagawad',
-      avatar: "assets/images/avatar/apple.png"
-    },{
-      name: 'Greggy B. Leal',
-      role: 'Brgy. Kagawad',
-      avatar: "assets/images/avatar/apple.png"
-    },{
-      name: 'Greggy B. Leal',
-      role: 'Brgy. Kagawad',
-      avatar: "assets/images/avatar/apple.png"
-    },{
-      name: 'Greggy B. Leal',
-      role: 'Brgy. Kagawad',
-      avatar: "assets/images/avatar/apple.png"
-    },{
-      name: 'Greggy B. Leal',
-      role: 'Brgy. Kagawad',
-      avatar: "assets/images/avatar/apple.png"
-    },],
-    skChairPerson: {
-      chairPerson: {
-        name: 'Lizette Santos',
-        role: 'SK Chairperson',
-        avatar: "assets/images/avatar/apple.png"
-      },
-      skSecretary: {
-        name: 'Joylyn Obina',
-        role: 'SK Secretary',
-        avatar: "assets/images/avatar/apple.png"
-      },
-      skTreasurer: {
-        name: 'Joylyn Obina',
-        role: 'SK Treasurer',
-        avatar: "assets/images/avatar/apple.png"
-      },
-      skKagawad: [{
-        name: 'Mark Niño Baylon',
-        role: 'SK Kagawad',
-        avatar: "assets/images/avatar/apple.png"
-      },{
-        name: 'Mark Niño Baylon',
-        role: 'SK Kagawad',
-        avatar: "assets/images/avatar/apple.png"
-      },{
-        name: 'Mark Niño Baylon',
-        role: 'SK Kagawad',
-        avatar: "assets/images/avatar/apple.png"
-      },{
-        name: 'Mark Niño Baylon',
-        role: 'SK Kagawad',
-        avatar: "assets/images/avatar/apple.png"
-      },{
-        name: 'Mark Niño Baylon',
-        role: 'SK Kagawad',
-        avatar: "assets/images/avatar/apple.png"
-      },{
-        name: 'Mark Niño Baylon',
-        role: 'SK Kagawad',
-        avatar: "assets/images/avatar/apple.png"
-      },{
-        name: 'Mark Niño Baylon',
-        role: 'SK Kagawad',
-        avatar: "assets/images/avatar/apple.png"
-      },],
-    }
-  }
 
   return (
     <>
@@ -205,7 +112,7 @@ const Home: React.FC = () => {
           <HeaderText>Organizational Chart</HeaderText>
         </Content>
         <OrganizationalChartContainer>
-          <BrgyOrganizationalChart org={organizationOfBarangay} />
+          <BrgyOrganizationalChart />
         </OrganizationalChartContainer>
       </HomePageContainer>
     </>
