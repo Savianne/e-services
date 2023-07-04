@@ -1,8 +1,12 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MaterialReactTable, { MRT_ColumnDef } from 'material-react-table';
-
+import doRequest from '../API/doRequest';
+import useDeleteResidentRecord from '../API/hooks/useDeleteResidentRecord';
 import TResidentRecord from './types/TResidentRecord';
+import useDeleteModal from './DeleteModal/useDeleteModal';
+import DeleteModal from './DeleteModal/DeleteModal';
+import useGetResidentsRecord from '../API/hooks/useGetResidentsRecord';
 
 //Mui Icons
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -19,117 +23,19 @@ import {
     Divider,
     MenuItem,
     ListItemIcon,
+    Snackbar,
+    Alert
  } from '@mui/material'
 
-
-
-//nested data is ok, see accessorKeys in ColumnDef below
-// const data: TResidentRecord[] = [
-//   {
-//     residentUID: '1234',
-//     gender: 'male',
-//     maritalStatus: 'single',
-//     dateOfBirth: "1998-03-08",
-//     picture: '/assets/images/avatar/apple.png',
-//     name: {
-//       firstName: 'John',
-//       lastName: 'Doe',
-//       middleName: 'Duggong',
-//       extName: 'jr',
-//     },
-//     currentAddress: "dfksdfsdoifjksdopkfposdf",
-//     permanentAddress: "sdfgetergtoekr dfgdfgg",
-//     homeContactInfo: {
-//       homeCPNumber: "093238877320",
-//       homeEmail: "www.homesds@gkdfg",
-//       homeTelNumber: "0988-49933"
-//     },
-//     personalContactInfo: {
-//       personalCPNumber: "091279er345",
-//       personalEmail: "www.mosdifsd",
-//       personalTelNumber: "09764=3234"
-//     }
-//   },
-//   {
-//     residentUID: '1234',
-//     gender: 'male',
-//     maritalStatus: 'single',
-//     dateOfBirth: "1998-03-08",
-//     picture: '/assets/images/avatar/apple.png',
-//     name: {
-//       firstName: 'John',
-//       lastName: 'Doe',
-//       middleName: 'Duggong',
-//       extName: 'jr',
-//     },
-//     currentAddress: "dfksdfsdoifjksdopkfposdf",
-//     permanentAddress: "sdfgetergtoekr dfgdfgg",
-//     homeContactInfo: {
-//       homeCPNumber: "093238877320",
-//       homeEmail: "www.homesds@gkdfg",
-//       homeTelNumber: "0988-49933"
-//     },
-//     personalContactInfo: {
-//       personalCPNumber: "091279er345",
-//       personalEmail: "www.mosdifsd",
-//       personalTelNumber: "09764=3234"
-//     }
-//   },
-//   {
-//     residentUID: '1234',
-//     gender: 'male',
-//     maritalStatus: 'single',
-//     dateOfBirth: "1998-03-08",
-//     picture: '/assets/images/avatar/apple.png',
-//     name: {
-//       firstName: 'John',
-//       lastName: 'Doe',
-//       middleName: 'Duggong',
-//       extName: 'jr',
-//     },
-//     currentAddress: "dfksdfsdoifjksdopkfposdf",
-//     permanentAddress: "sdfgetergtoekr dfgdfgg",
-//     homeContactInfo: {
-//       homeCPNumber: "093238877320",
-//       homeEmail: "www.homesds@gkdfg",
-//       homeTelNumber: "0988-49933"
-//     },
-//     personalContactInfo: {
-//       personalCPNumber: "091279er345",
-//       personalEmail: "www.mosdifsd",
-//       personalTelNumber: "09764=3234"
-//     }
-//   },
-//   {
-//     residentUID: '1234',
-//     gender: 'male',
-//     maritalStatus: 'single',
-//     dateOfBirth: "1998-03-08",
-//     picture: '/assets/images/avatar/apple.png',
-//     name: {
-//       firstName: 'John',
-//       lastName: 'Doe',
-//       middleName: 'Duggong',
-//       extName: 'jr',
-//     },
-//     currentAddress: "dfksdfsdoifjksdopkfposdf",
-//     permanentAddress: "sdfgetergtoekr dfgdfgg",
-//     homeContactInfo: {
-//       homeCPNumber: "093238877320",
-//       homeEmail: "www.homesds@gkdfg",
-//       homeTelNumber: "0988-49933"
-//     },
-//     personalContactInfo: {
-//       personalCPNumber: "091279er345",
-//       personalEmail: "www.mosdifsd",
-//       personalTelNumber: "09764=3234"
-//     }
-//   }
-// ];
-
-const ResidentsTable: FC<{residents: TResidentRecord[]}> = ({residents}) => {
+const ResidentsTable: FC = () => {
+  const { deleteResident, isLoading: isDeleting, isError: isDeletionError, isSuccess: isDeletionSuccess} = useDeleteResidentRecord();
+  const {data: residents, isLoading, isError, isSuccess} = useGetResidentsRecord();
+  const deleteRecordModal = useDeleteModal();
   const navigation = useNavigate();
   const [rowSelection, setRowSelection] = React.useState({});
+  const [open, setOpen] = React.useState(false);
+
+  const [data, setData] = useState<TResidentRecord[]>([])
   //should be memoized or stable
   const columns = useMemo<MRT_ColumnDef<TResidentRecord>[]>(
     () => [
@@ -219,17 +125,32 @@ const ResidentsTable: FC<{residents: TResidentRecord[]}> = ({residents}) => {
     [],
   );
 
-  React.useEffect(() => {
-    console.log(rowSelection);
-  }, [rowSelection]);
+  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if(residents) setData(residents);
+  }, [residents])
   return (
+    <>
+    <DeleteModal onDeleteSuccess={() => setOpen(true)} />
+    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          Delete Resident record successfully!
+      </Alert>
+    </Snackbar>
     <MaterialReactTable 
     columns={columns} 
-    data={residents} 
+    data={data? data : []} 
     // enableRowSelection
     getRowId={(row) => row.residentUID}
     onRowSelectionChange={setRowSelection}
-    state={{ rowSelection }}
+    // state={{ rowSelection }}
     positionToolbarAlertBanner="bottom"
     //add custom action buttons to top-left of top toolbar
     renderTopToolbarCustomActions={({ table }) => (
@@ -244,30 +165,6 @@ const ResidentsTable: FC<{residents: TResidentRecord[]}> = ({residents}) => {
         >
           Add Recident
         </Button>
-        {/* <Divider orientation='vertical' variant='middle' flexItem />
-        <IconButton 
-        size="small"
-        aria-label="delete" 
-        color='error'
-        disabled={Object.entries(rowSelection).length == 0}
-        onClick={() => {
-          alert('Delete Selected Accounts');
-        }}
-        sx={{width: '35px', height: '35px'}}>
-          <DeleteIcon fontSize="small" />
-        </IconButton>
-        <Divider orientation='vertical' variant='middle' flexItem />
-        <IconButton 
-        size="small"
-        aria-label="edit" 
-        color='success'
-        disabled={!(Object.entries(rowSelection).length == 1)}
-        onClick={() => {
-          alert('Edit Selected Accounts');
-        }}
-        sx={{width: '35px', height: '35px'}}>
-          <EditIcon fontSize="small" />
-        </IconButton> */}
       </Box>
     )}
 
@@ -302,10 +199,10 @@ const ResidentsTable: FC<{residents: TResidentRecord[]}> = ({residents}) => {
           children: 'Network Error. Could not fetch data.',
         }
       }
-      // state={{
-      //   showAlertBanner: true,
-      //   showProgressBars: false,
-      // }}
+      state={{
+        showAlertBanner: isError,
+        showProgressBars: isLoading,
+      }}
       enableRowActions
       renderRowActionMenuItems={({ closeMenu, table, row }) => [
         <MenuItem
@@ -339,7 +236,21 @@ const ResidentsTable: FC<{residents: TResidentRecord[]}> = ({residents}) => {
         <MenuItem
         key={2}
         onClick={() => {
-          // View profile logic...
+          deleteRecordModal(`Records of ${row.original.name.firstName.toLocaleUpperCase()} ${row.original.name.middleName.toLocaleUpperCase()}. ${row.original.name.lastName.toLocaleUpperCase()}`, () => {
+            return new Promise<{success: boolean}>((res, rej) => {
+              doRequest({
+                method: "DELETE",
+                url: "/delete-resident-record",
+                data: { residentUID:  row.original.residentUID}
+              })
+                .then(response => {
+                  data.splice(row.index, 1); //assuming simple data table
+                  setData([...data]);
+                  response.success? res(response) : rej(response);
+                })
+                .catch(err => rej({success: false}))
+            })
+          })
           closeMenu();
         }}
         sx={{ m: 0 }}
@@ -366,7 +277,7 @@ const ResidentsTable: FC<{residents: TResidentRecord[]}> = ({residents}) => {
         <MenuItem
         key={4}
         onClick={() => {
-          // Send email logic...
+          navigation(`/admin/e-services/print-document/${row.original.residentUID}`)
           closeMenu();
         }}
         sx={{ m: 0 }}
@@ -378,6 +289,7 @@ const ResidentsTable: FC<{residents: TResidentRecord[]}> = ({residents}) => {
       </MenuItem>,
       ]}
     />
+    </>
   )
 };
 

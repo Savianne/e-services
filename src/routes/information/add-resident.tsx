@@ -4,6 +4,8 @@ import { IStyledFC } from "../../app/IStyledFC";
 
 import SiteMapBoard from "../../app/SiteMapBoard";
 
+import { useNavigate } from "react-router-dom";
+
 //Input Validators
 import validatePHNumber from "../../utils/inputValidators/validators/validatePHNumber";
 import validatePHTelephone from "../../utils/inputValidators/validators/validatePHTelNumber";
@@ -19,6 +21,8 @@ import {
     Checkbox,
     Button,
     CircularProgress,
+    Snackbar,
+    Alert
 } from '@mui/material';
 
 //Date Picker Component
@@ -79,13 +83,15 @@ const AddResidentFormSubmitButton = styled(Button)`
 `;
 
 const AddResident: React.FC = () => {
-    const {addResidenRecord, isError, isLoading, isUpdating, error} = useAddResidentRecord();
+    const navigator = useNavigate();
+    const {addResidenRecord, residentUID, isError, isLoading, isSuccess, isUpdating, error} = useAddResidentRecord();
     const [cpNumber, setCpNumber] = usePHCPNumberFormat();
     const [telNumber, setTelNumber] = usePHTelNumberFormat();
     const [homeCpNumber, setHomeCpNumber] = usePHCPNumberFormat();
     const [homeTelNumber, setHomeTelNumber] = usePHTelNumberFormat();
     const [isSeniorCitizenMember, setIsSeniorCitizenMember] =  React.useState(false);
     const [formIsReadyState, updateFormIsReadyState] = React.useState(false);
+    const [newAdded, setNewAdded] = React.useState(false);
     const [form, formDispatcher] = useFormControl({
         firstName: {
             required: true,
@@ -228,6 +234,14 @@ const AddResident: React.FC = () => {
 
     const [sameAsPermanentAddress, updateSameAsPermanentAddress] = React.useState(false);
 
+    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setNewAdded(false);
+    };
+
     const permanentAddress = usePhilippinePlacesPickerSelect(
         (region) => formDispatcher?.region(region),
         (province) => formDispatcher?.province(province),
@@ -276,10 +290,22 @@ const AddResident: React.FC = () => {
         <>
             <SiteMapBoard title="Add Resident" path="/information / residents / add-resident" />
             <Container>
+            <Snackbar 
+            open={newAdded} 
+            autoHideDuration={6000} 
+            onClose={handleClose} 
+            message="Successfully added new Record!"
+            action={
+                <Button color="secondary" size="small" onClick={(e) => navigator(`/admin/information/residents/view/${residentUID}`)}>
+                    View
+                </Button>
+            }/>
+            <Snackbar open={isError} autoHideDuration={6000}>
+                <Alert severity="error" sx={{ width: '100%' }}>
+                    Failed to add record!
+                </Alert>
+            </Snackbar>
                 <Content>
-                    {/* {
-                        formIsReadyState? <h1>Form is now Ready to be submit</h1> : <h1>Form is not yet Ready to be submit</h1>
-                    } */}
                     <AddResidentFormControl elevation={6} >
                         <h2 className="data-title">Personal Information</h2>
                         <DataGroup>
@@ -767,7 +793,7 @@ const AddResident: React.FC = () => {
                         <AddResidentFormSubmitButton 
                         endIcon={isLoading? <CircularProgress size={20} color="inherit" /> : null}
                         variant="contained" 
-                        disabled={!formIsReadyState}
+                        disabled={!formIsReadyState || isLoading}
                         onClick={() => {
                             const residenRecord: TResidentRecord = {
                                 personalInformation: {
@@ -812,7 +838,17 @@ const AddResident: React.FC = () => {
                                 senior_citizen: isSeniorCitizenMember,
                             }
 
-                            addResidenRecord(residenRecord, () => alert("success"));
+                            addResidenRecord(residenRecord, () => {
+                                setNewAdded(true);
+                                form.clear();
+                                homeContactInfoForm.clear()
+                                permanentAddress.setRegion(null);
+                                currentAddress.setRegion(null);
+                                setCpNumber("");
+                                setHomeCpNumber("");
+                                setTelNumber("");
+                                setHomeTelNumber("");
+                            });
 
                         }}>Submit</AddResidentFormSubmitButton>
                     </AddResidentFormControl>

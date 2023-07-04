@@ -1,14 +1,14 @@
 import React from "react";
 import { styled } from '@mui/material/styles';
-import { IStyledFC } from "../../app/IStyledFC";
 
 import SiteMapBoard from "../../app/SiteMapBoard";
-
 //Mui Icons
 
 //MUI Component
 import {
     Box,
+    Snackbar,
+    Alert
 } from '@mui/material';
 
 import { Container, Content } from "../../app/AppLayout";
@@ -27,23 +27,13 @@ const TableContent = styled(Content)`
 `;
 
 const Residents: React.FC = () => {
-    const {data, isLoading, isError, isSuccess} = useGetResidentsRecord();
-    React.useEffect(() => {
-        console.log(data)
-    }, [data])
     return (
         <>
             <SiteMapBoard title="Residents" path="/information / residents" />
             <Container>
                 <TableContent>
                     <TableContainer>
-                        {
-                            isLoading && <h1>Loading...</h1>
-                        }
-                        {
-                            data && <ResidentsTable residents={data} />
-                        }
-                        
+                        <ResidentsTable />
                     </TableContainer>
                 </TableContent>
             </Container>

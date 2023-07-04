@@ -1,5 +1,4 @@
 import React from "react";
-import addResidenRecord from "../addResidentRecord";
 import getResidentsRecord, { TResident } from "../getResidentsRecord";
 import TResidentRecord from "../../app/types/TResidentRecord";
 
@@ -12,6 +11,7 @@ function useGetResidentsRecord() {
     const [data, setData] = React.useState<TResidentRecord[] | null>(null);
 
     React.useEffect(() => {
+        setIsLoading(true);
         getResidentsRecord()
         .then(response => {
             setIsLoading(false);
@@ -22,6 +22,7 @@ function useGetResidentsRecord() {
         .catch(err => {
             setIsLoading(false);
             setIsError(true);
+            isSuccess && setIsSuccess(false);
             setError(err)
         })
     }, []);
@@ -35,7 +36,7 @@ function useGetResidentsRecord() {
     }
 }
 
-function chageShape(data: TResident[]) {
+export function chageShape(data: TResident[]) {
     return data.map(from => {
         return {
             residentUID: from.residentUID,

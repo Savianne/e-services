@@ -40,11 +40,13 @@ const Information: React.FC = () => {
             <Container>
                 <InformationRouteContent>
                     <CardContainer>
-                        <RecordsCard title="Residents" recordsCount={1140} icon={<GroupsRoundedIcon />} color="#19fd22" link="residents" />
-                        <RecordsCard title="Brgy. Officials ( Current Term )" recordsCount={15} icon={<Groups3RoundedIcon />} color="#00bcd4" link="brgy-officials" />
+                        <RecordsCard title="Residents"  icon={<GroupsRoundedIcon />} color="#19fd22" link="residents" />
+                        <RecordsCard title="Senior Citizens of Brgy. Sandiat Centro"  icon={<Groups3RoundedIcon />} color="#607D8B" link="senior-citizens" />
+                        {/* <RecordsCard title="Brgy. Officials ( Current Term )" recordsCount={15} icon={<Groups3RoundedIcon />} color="#00bcd4" link="brgy-officials" /> */}
                     </CardContainer>
                     <CardContainer>
-                        <RecordsCard title="Terms of Service" recordsCount={15} icon={<Groups3RoundedIcon />} color="#00bcd4" link="terms-of-service" />
+                        <RecordsCard title="Term of Service (Barangay)" icon={<Groups3RoundedIcon />} color="#00bcd4" link="terms-of-service" />
+                        <RecordsCard title="Term of Service (SK)" icon={<Groups3RoundedIcon />} color="#E91E63" link="terms-of-service-sk" />
                     </CardContainer>
                 </InformationRouteContent>
             </Container>

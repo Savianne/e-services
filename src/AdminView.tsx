@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material';
 import { useAppSelector } from './global-state/hooks';
 import { ParallaxProvider } from 'react-scroll-parallax';
@@ -30,8 +30,13 @@ import EServices from './routes/e-services/eServices';
 import Residents from './routes/information/residents';
 import AddResident from './routes/information/add-resident';
 import BrgyOfficals from './routes/information/brgy-officials';
-import TermOfServiceTable from './routes/information/Terms-of-service';
+import TermOfService from './routes/information/Terms-of-service';
 import ResidentInformation from './routes/information/resident-informationtion';
+import AddNewTermsOfService from './routes/information/add-new-term';
+import SKTermsOfService from './routes/information/sk-term-of-service';
+import SeniorCitizens from './routes/information/senior-citizens';
+import PrintDocument from './routes/e-services/print-document';
+import DocumentRequest from './routes/e-services/document-request';
 
 const BaseContainer = styled(Box)`
   display: flex;
@@ -46,7 +51,12 @@ const PublicPageBaseContainer = styled(BaseContainer)`
 `
 
 function AdminView() {
+  const [admin, setAdmin] = useState(null);
+  
   const themeMode = useAppSelector(state => state.themeModeToggle.mode);
+  useEffect(() => {
+
+  }, [])
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <ParallaxProvider>
@@ -63,10 +73,27 @@ function AdminView() {
                     <Route path="/admin/information/residents/add-resident" element={<AddResident />}/>
                     <Route path="/admin/information/residents/:action/:residentUID" element={<ResidentInformation />}/>
                   </Route>
+                  <Route path="/admin/information/senior-citizens" element={<SeniorCitizens />} />
                   <Route path="/admin/information/brgy-officials" element={<BrgyOfficals />} />
-                  <Route path="/admin/information/terms-of-service" element={<TermOfServiceTable />} />
+                  <Route path="/admin/information/terms-of-service">
+                    <Route index element={<TermOfService />}/>
+                    <Route path="/admin/information/terms-of-service/new/:org" element={<AddNewTermsOfService />}/>
+                  </Route>
+                  <Route path="/admin/information/terms-of-service-sk">
+                    <Route index element={<SKTermsOfService />} />
+                    <Route path="/admin/information/terms-of-service-sk/new/:org" element={<AddNewTermsOfService />}/>
+                  </Route>
+
                 </Route>
-                <Route path="/admin/e-services" index element={<EServices />} />
+                <Route path="/admin/e-services" >
+                  <Route index element={<EServices />} />
+                  <Route path="/admin/e-services/sms" element={<h1>SMS</h1>} />
+                  <Route path="/admin/e-services/print-document">
+                    <Route index element={<PrintDocument />} />
+                    <Route path="/admin/e-services/print-document/:residentUID" element={<PrintDocument />} />
+                  </Route>
+                  <Route path="/admin/e-services/document-request" element={<DocumentRequest />} />
+                </Route>
               </Route>
             </Routes>
           </BrowserRouter>

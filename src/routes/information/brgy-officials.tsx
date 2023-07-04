@@ -191,104 +191,104 @@ const BrgyOfficialCardContainer = styled(Content)`
 `
 
 const BrgyOfficals: React.FC = () => {
-    const organizationOfBarangay:IBrgyOrgChart = {
-        term: "2018-2021",
-        punongBarangay: {
-          name: 'Apple Jane De Guzman',
-          role: 'Punong Barangay',
-          avatar: "/assets/images/avatar/apple.png"
-        },
-        secretary: {
-          name: 'Danielle R. Bacabitas',
-          role: 'Brgy. Secretary',
-          avatar: "/assets/images/avatar/apple.png"
-        },
-        treasurer: {
-          name: 'Danica Santos-Esteban',
-          role: 'Brgy. Treasurer',
-          avatar: "/assets/images/avatar/apple.png"
-        },
-        kagawad: [{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. 1st Kagawad',
-          avatar: "/assets/images/avatar/apple.png"
-        },{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. Kagawad',
-          avatar: "/assets/images/avatar/apple.png"
-        },{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. Kagawad',
-          avatar: "/assets/images/avatar/apple.png"
-        },{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. Kagawad',
-          avatar: "/assets/images/avatar/apple.png"
-        },{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. Kagawad',
-          avatar: "/assets/images/avatar/apple.png"
-        },{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. Kagawad',
-          avatar: "/assets/images/avatar/apple.png"
-        },{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. Kagawad',
-          avatar: "/assets/images/avatar/apple.png"
-        },],
-        skChairPerson: {
-          chairPerson: {
-            name: 'Lizette Santos',
-            role: 'SK Chairperson',
-            avatar: "/assets/images/avatar/apple.png"
-          },
-          skSecretary: {
-            name: 'Joylyn Obina',
-            role: 'SK Secretary',
-            avatar: "/assets/images/avatar/apple.png"
-          },
-          skTreasurer: {
-            name: 'Joylyn Obina',
-            role: 'SK Treasurer',
-            avatar: "assets/images/avatar/apple.png"
-          },
-          skKagawad: [{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "/assets/images/avatar/apple.png"
-          },{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "/assets/images/avatar/apple.png"
-          },{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "/assets/images/avatar/apple.png"
-          },{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "/assets/images/avatar/apple.png"
-          },{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "/assets/images/avatar/apple.png"
-          },{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "/assets/images/avatar/apple.png"
-          },{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "/assets/images/avatar/apple.png"
-          },],
-        }
-      }
+    // const organizationOfBarangay:IBrgyOrgChart = {
+    //     term: "2018-2021",
+    //     punongBarangay: {
+    //       name: 'Apple Jane De Guzman',
+    //       role: 'Punong Barangay',
+    //       avatar: "/assets/images/avatar/apple.png"
+    //     },
+    //     secretary: {
+    //       name: 'Danielle R. Bacabitas',
+    //       role: 'Brgy. Secretary',
+    //       avatar: "/assets/images/avatar/apple.png"
+    //     },
+    //     treasurer: {
+    //       name: 'Danica Santos-Esteban',
+    //       role: 'Brgy. Treasurer',
+    //       avatar: "/assets/images/avatar/apple.png"
+    //     },
+    //     kagawad: [{
+    //       name: 'Greggy B. Leal',
+    //       role: 'Brgy. 1st Kagawad',
+    //       avatar: "/assets/images/avatar/apple.png"
+    //     },{
+    //       name: 'Greggy B. Leal',
+    //       role: 'Brgy. Kagawad',
+    //       avatar: "/assets/images/avatar/apple.png"
+    //     },{
+    //       name: 'Greggy B. Leal',
+    //       role: 'Brgy. Kagawad',
+    //       avatar: "/assets/images/avatar/apple.png"
+    //     },{
+    //       name: 'Greggy B. Leal',
+    //       role: 'Brgy. Kagawad',
+    //       avatar: "/assets/images/avatar/apple.png"
+    //     },{
+    //       name: 'Greggy B. Leal',
+    //       role: 'Brgy. Kagawad',
+    //       avatar: "/assets/images/avatar/apple.png"
+    //     },{
+    //       name: 'Greggy B. Leal',
+    //       role: 'Brgy. Kagawad',
+    //       avatar: "/assets/images/avatar/apple.png"
+    //     },{
+    //       name: 'Greggy B. Leal',
+    //       role: 'Brgy. Kagawad',
+    //       avatar: "/assets/images/avatar/apple.png"
+    //     },],
+    //     skChairPerson: {
+    //       chairPerson: {
+    //         name: 'Lizette Santos',
+    //         role: 'SK Chairperson',
+    //         avatar: "/assets/images/avatar/apple.png"
+    //       },
+    //       skSecretary: {
+    //         name: 'Joylyn Obina',
+    //         role: 'SK Secretary',
+    //         avatar: "/assets/images/avatar/apple.png"
+    //       },
+    //       skTreasurer: {
+    //         name: 'Joylyn Obina',
+    //         role: 'SK Treasurer',
+    //         avatar: "assets/images/avatar/apple.png"
+    //       },
+    //       skKagawad: [{
+    //         name: 'Mark Niño Baylon',
+    //         role: 'SK Kagawad',
+    //         avatar: "/assets/images/avatar/apple.png"
+    //       },{
+    //         name: 'Mark Niño Baylon',
+    //         role: 'SK Kagawad',
+    //         avatar: "/assets/images/avatar/apple.png"
+    //       },{
+    //         name: 'Mark Niño Baylon',
+    //         role: 'SK Kagawad',
+    //         avatar: "/assets/images/avatar/apple.png"
+    //       },{
+    //         name: 'Mark Niño Baylon',
+    //         role: 'SK Kagawad',
+    //         avatar: "/assets/images/avatar/apple.png"
+    //       },{
+    //         name: 'Mark Niño Baylon',
+    //         role: 'SK Kagawad',
+    //         avatar: "/assets/images/avatar/apple.png"
+    //       },{
+    //         name: 'Mark Niño Baylon',
+    //         role: 'SK Kagawad',
+    //         avatar: "/assets/images/avatar/apple.png"
+    //       },{
+    //         name: 'Mark Niño Baylon',
+    //         role: 'SK Kagawad',
+    //         avatar: "/assets/images/avatar/apple.png"
+    //       },],
+    //     }
+    //   }
     return (
         <>
             <SiteMapBoard title="Barangay Officials ( Current Term )" path="/information / brgy-officials" />
             <Container>
-                <BrgyOfficialCardContainer>
+                {/* <BrgyOfficialCardContainer>
                     <h1>Barangay Officials of the Year / Term 2022 - 2025 ( Current Term )</h1>
                     <BrgyOfficialCard {...organizationOfBarangay.punongBarangay} color="orange"/>
                     <BrgyOfficialCard {...organizationOfBarangay.secretary} color="rgb(169, 209, 142)" />
@@ -306,7 +306,7 @@ const BrgyOfficals: React.FC = () => {
                             <BrgyOfficialCard {...item} color="rgb(130 43 173)" />
                         ))
                     }
-                </BrgyOfficialCardContainer>
+                </BrgyOfficialCardContainer> */}
             </Container>
         </>
     )

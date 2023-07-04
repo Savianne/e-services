@@ -99,7 +99,7 @@ const RecordsCardStyles = styled(Paper)<{color: string}>`
 
 interface IFCRecordsCard {
     title: string,
-    recordsCount: number,
+    recordsCount?: number,
     color: string,
     icon: ReactNode,
     link: string,
@@ -113,7 +113,7 @@ const RecordsCard:React.FC<IFCRecordsCard> = ({title, recordsCount, icon, color,
             <div className="bottom-right-corner" />
             <div className="content">
                 <h1>{title}</h1>
-                <span><h3>{recordsCount}</h3>Records</span>
+                {recordsCount && <span><h3>{recordsCount}</h3>Records</span>}
             </div>
             <i className="icon">{icon}</i>
         </RecordsCardStyles>

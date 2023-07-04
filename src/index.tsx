@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { store } from './global-state/store';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
+import DeleteModalContext from './app/DeleteModal/DeleteModalContext';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -24,7 +25,9 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <AdminView />
+      <DeleteModalContext>
+        <AdminView />
+      </DeleteModalContext>
     </Provider>
   </React.StrictMode>
 );

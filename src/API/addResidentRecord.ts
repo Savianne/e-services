@@ -33,11 +33,11 @@ export type TResidentRecord = {
     senior_citizen: boolean
 }
 
-const addResidentRecord = (residentRecord: TResidentRecord) : Promise<TResponseFlag<null>> => {
-    return new Promise<TResponseFlag<null>>((res, rej) => {
+const addResidentRecord = (residentRecord: TResidentRecord) : Promise<TResponseFlag<string>> => {
+    return new Promise<TResponseFlag<string>>((res, rej) => {
         axios.post(`${API_BASE_URL}/add-resident-record`, { residentRecord: residentRecord })
         .then(resonse => {
-            const responseFlag = resonse.data as TResponseFlag<null>;
+            const responseFlag = resonse.data as TResponseFlag<string>;
             responseFlag.success? res(responseFlag) : rej(responseFlag);
         })
         .catch(err => rej(err));

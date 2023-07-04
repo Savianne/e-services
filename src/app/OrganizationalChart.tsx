@@ -13,18 +13,17 @@ import {
 interface IBrgyPersonel {
     name: string,
     role: string,
-    avatar: string
+    avatar?: string | null
 }
 
 export interface IBrgyOrgChart {
-    term: string,
     punongBarangay: IBrgyPersonel,
     secretary: IBrgyPersonel,
     treasurer: IBrgyPersonel,
-    kagawad: [IBrgyPersonel, IBrgyPersonel, IBrgyPersonel, IBrgyPersonel, IBrgyPersonel, IBrgyPersonel, IBrgyPersonel],
+    kagawad: IBrgyPersonel[],
     skChairPerson: {
         chairPerson: IBrgyPersonel,
-        skKagawad: [IBrgyPersonel, IBrgyPersonel, IBrgyPersonel, IBrgyPersonel, IBrgyPersonel, IBrgyPersonel, IBrgyPersonel],
+        skKagawad: IBrgyPersonel[],
         skSecretary: IBrgyPersonel,
         skTreasurer: IBrgyPersonel,
     },
@@ -45,7 +44,7 @@ const FCOrgPersonel: React.FC<IOrgPersonel> = ({className, color, personel, logo
                     logo && <img src={logo} alt="logo" className="logo"/>
                 }
                 <span className="personel-avatar">
-                    <Avatar src={personel.avatar} alt={personel.name} />
+                    <Avatar src={personel.avatar || undefined} alt={personel.name} />
                 </span>
                 <div className="personel-info">
                     <h3>Hon. {personel.name}</h3>
@@ -68,7 +67,7 @@ const OrgPersonel = styled(FCOrgPersonel)`
         display: flex;
         flex: 0 1 fit-content;
         max-width: 245px;
-        height: 55px;
+        /* height: 55px; */
         align-items: center;
         justify-content: center;
         background-color: ${(props) => props.color};
@@ -173,100 +172,7 @@ const OrgChartContainer = styled(Box)`
     height: fit-content;
 `;
 
-const BrgyOrganizationalChart: React.FC = () => {
-    const org:IBrgyOrgChart = {
-        term: "2018-2021",
-        punongBarangay: {
-          name: 'Apple Jane De Guzman',
-          role: 'Punong Barangay',
-          avatar: "assets/images/avatar/apple.png"
-        },
-        secretary: {
-          name: 'Danielle R. Bacabitas',
-          role: 'Brgy. Secretary',
-          avatar: "assets/images/avatar/apple.png"
-        },
-        treasurer: {
-          name: 'Danica Santos-Esteban',
-          role: 'Brgy. Treasurer',
-          avatar: "assets/images/avatar/apple.png"
-        },
-        kagawad: [{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. 1st Kagawad',
-          avatar: "assets/images/avatar/apple.png"
-        },{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. Kagawad',
-          avatar: "assets/images/avatar/apple.png"
-        },{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. Kagawad',
-          avatar: "assets/images/avatar/apple.png"
-        },{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. Kagawad',
-          avatar: "assets/images/avatar/apple.png"
-        },{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. Kagawad',
-          avatar: "assets/images/avatar/apple.png"
-        },{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. Kagawad',
-          avatar: "assets/images/avatar/apple.png"
-        },{
-          name: 'Greggy B. Leal',
-          role: 'Brgy. Kagawad',
-          avatar: "assets/images/avatar/apple.png"
-        },],
-        skChairPerson: {
-          chairPerson: {
-            name: 'Lizette Santos',
-            role: 'SK Chairperson',
-            avatar: "assets/images/avatar/apple.png"
-          },
-          skSecretary: {
-            name: 'Joylyn Obina',
-            role: 'SK Secretary',
-            avatar: "assets/images/avatar/apple.png"
-          },
-          skTreasurer: {
-            name: 'Joylyn Obina',
-            role: 'SK Treasurer',
-            avatar: "assets/images/avatar/apple.png"
-          },
-          skKagawad: [{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "assets/images/avatar/apple.png"
-          },{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "assets/images/avatar/apple.png"
-          },{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "assets/images/avatar/apple.png"
-          },{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "assets/images/avatar/apple.png"
-          },{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "assets/images/avatar/apple.png"
-          },{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "assets/images/avatar/apple.png"
-          },{
-            name: 'Mark Niño Baylon',
-            role: 'SK Kagawad',
-            avatar: "assets/images/avatar/apple.png"
-          },],
-        }
-      }
+const BrgyOrganizationalChart: React.FC<{org: IBrgyOrgChart}> = ({org}) => {
     return (
         <OrgChartContainer>
             <Tree
@@ -278,7 +184,7 @@ const BrgyOrganizationalChart: React.FC = () => {
                 <TreeNode label={<OrgPersonel color="rgb(169, 209, 142)" personel={org.secretary} />} />
                 
                 <TreeNode label={<TreeNodeParent avatar="/brgy-sandiat-centro-logo.jpg" title="Brangay Kagawads"/>}>
-                    <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[0]} logo="/brgy-sandiat-centro-logo.jpg" />}>
+                    {/* <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[0]} logo="/brgy-sandiat-centro-logo.jpg" />}>
                         <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[1]} logo="/brgy-sandiat-centro-logo.jpg" />}>
                             <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[2]} logo="/brgy-sandiat-centro-logo.jpg" />}>
                                 <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[3]} logo="/brgy-sandiat-centro-logo.jpg" />}>
@@ -290,11 +196,12 @@ const BrgyOrganizationalChart: React.FC = () => {
                                 </TreeNode>
                             </TreeNode>
                         </TreeNode>
-                    </TreeNode>
+                    </TreeNode> */}
+                    {renderKagawad(org.kagawad, 0)}
                 </TreeNode>
 
-                <TreeNode label={<TreeNodeParent avatar="assets/images/SK-logo.png" title="Sanguniang Kabataan"/>}>
-                    <TreeNode label={<OrgPersonel color="rgb(241, 67, 183)" personel={org.skChairPerson.chairPerson} logo="assets/images/SK-logo.png" />} >
+                <TreeNode label={<TreeNodeParent avatar="/assets/images/SK-logo.png" title="Sanguniang Kabataan"/>}>
+                    {/* <TreeNode label={<OrgPersonel color="rgb(241, 67, 183)" personel={org.skChairPerson.chairPerson} logo="assets/images/SK-logo.png" />} >
                         <TreeNode label={<OrgPersonel color="#2196F3" personel={org.skChairPerson.skSecretary} logo="assets/images/SK-logo.png" />}>
                             <TreeNode label={<OrgPersonel color="#798dfd" personel={org.skChairPerson.skTreasurer} logo="assets/images/SK-logo.png" />}>
                                 <TreeNode label={<OrgPersonel color="rgb(130 43 173)" personel={org.skChairPerson.skKagawad[0]} logo="assets/images/SK-logo.png" />}>
@@ -312,7 +219,8 @@ const BrgyOrganizationalChart: React.FC = () => {
                                 </TreeNode>
                             </TreeNode>
                         </TreeNode>
-                    </TreeNode>
+                    </TreeNode> */}
+                    {renderKagawad(org.skChairPerson.skKagawad, 0)}
                 </TreeNode>
                 <TreeNode label={<OrgPersonel color="rgb(0, 176, 80)" personel={org.treasurer} />} />
             </Tree>
@@ -320,4 +228,26 @@ const BrgyOrganizationalChart: React.FC = () => {
     )
 }
 
+function renderKagawad(kagawadArray: any[], index: number): JSX.Element | null {
+    if (index >= kagawadArray.length) {
+      return null;
+    }
+  
+    const kagawad = kagawadArray[index];
+  
+    return (
+      <TreeNode
+        label={
+          <OrgPersonel
+            color="rgb(130 43 173)"
+            personel={kagawad}
+            logo="assets/images/SK-logo.png"
+          />
+        }
+      >
+        {renderKagawad(kagawadArray, index + 1)}
+      </TreeNode>
+    );
+}
+  
 export default BrgyOrganizationalChart

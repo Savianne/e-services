@@ -8,7 +8,7 @@ function useAddResidentRecord() {
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [error, setError] = React.useState<null | any>(null);
     const [isUpdating, setIsUpdating] = React.useState(false);
-    const [data, setData] = React.useState<null | []>(null);
+    const [residentUID, setResidentUID] = React.useState<null | string>(null);
 
     return {
         addResidenRecord: (residentRecord: TResidentRecord, onSuccess?: () => void, onError?: () => void, onLoading?:  () => void) => {
@@ -20,7 +20,9 @@ function useAddResidentRecord() {
                 setIsSuccess(true);
                 onSuccess && onSuccess();
                 onError && onError();
-                onLoading && onLoading()
+                onLoading && onLoading();
+                console.log(response)
+                response.data && setResidentUID(response.data)
             })
             .catch(err => {
                 setIsLoading(false);
@@ -28,11 +30,12 @@ function useAddResidentRecord() {
                 setError(err)
             })
         },
+        isSuccess,
         isLoading,
         isUpdating,
         isError,
         error,
-        data
+        residentUID
     }
 }
 

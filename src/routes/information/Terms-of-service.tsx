@@ -26,7 +26,7 @@ const TableContainer = styled(Box)`
 const TermsOfService: React.FC = () => {
     return (
         <>
-            <SiteMapBoard title="Term of Service Table" path="/information / terms-of-service" />
+            <SiteMapBoard title="Term of Service Table (Barangay)" path="/information / terms-of-service" />
             <Container>
                 <Content>
                     <TableContainer>

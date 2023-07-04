@@ -11,8 +11,8 @@ interface IServerResponseFlag {
 const doRequest = <T>(config: AxiosRequestConfig) : Promise<TResponseFlag<T>> => {
     return new Promise<TResponseFlag<T>>((res, rej) => {
         axios({
-            ...config,
             baseURL: API_BASE_URL,
+            ...config,
         })
         .then(response => {
             const serverResponseFla = response.data as IServerResponseFlag;

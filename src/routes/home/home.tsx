@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ParallaxBanner } from 'react-scroll-parallax';
 import { styled } from "@mui/material/styles";
 
 import { IStyledFC } from "../../app/IStyledFC";
 import { IBrgyOrgChart } from "../../app/OrganizationalChart";
-
+import useGetSKTerms from "../../API/hooks/useGetSKTerms";
+import useGetTerms from "../../API/hooks/useGetTerms";
 import SiteMapBoard from "../../app/SiteMapBoard";
 
 //MUI Component
@@ -61,7 +62,64 @@ const OrganizationalChartContainer = styled(Box)`
 
 
 const Home: React.FC = () => {
+  const {data: skTerm} = useGetSKTerms();
+  const {data: barangayTerm} = useGetTerms();
+  const [orgChart, setOrgChart] = useState<null | IBrgyOrgChart>(null);
 
+  useEffect(() => {
+    if(skTerm && barangayTerm) {
+      const brgyOrgChart: IBrgyOrgChart = {
+        punongBarangay: {
+          name: `${barangayTerm[0].barangayChairperson.firstName} ${barangayTerm[0].barangayChairperson.middleName[0]}. ${barangayTerm[0].barangayChairperson.surname} ${barangayTerm[0].barangayChairperson.extName? barangayTerm[0].barangayChairperson.extName : ''}`.toUpperCase(),
+          role: 'Barangay Chairperson',
+          avatar: barangayTerm[0].barangayChairperson.picture
+        },
+        secretary: {
+          name: `${barangayTerm[0].barangaySecretary.firstName} ${barangayTerm[0].barangaySecretary.middleName[0]}. ${barangayTerm[0].barangaySecretary.surname} ${barangayTerm[0].barangaySecretary.extName? barangayTerm[0].barangaySecretary.extName : ''}`.toUpperCase(),
+          role: 'Barangay Secretary',
+          avatar: barangayTerm[0].barangaySecretary.picture
+        },
+        treasurer: {
+          name: `${barangayTerm[0].barangayTreasurer.firstName} ${barangayTerm[0].barangayTreasurer.middleName[0]}. ${barangayTerm[0].barangayTreasurer.surname} ${barangayTerm[0].barangayTreasurer.extName? barangayTerm[0].barangayTreasurer.extName : ''}`.toUpperCase(),
+          role: 'Barangay Treasurer',
+          avatar: barangayTerm[0].barangayTreasurer.picture
+        },
+        kagawad: [...barangayTerm[0].barangayCouncilors.map(item => (
+          {
+            name: `${item.firstName} ${item.middleName[0]}. ${item.surname} ${item.extName? item.extName : ''}`.toUpperCase(),
+            role: `Barangay Counsilor - ${item.committee}`,
+            avatar: item.picture
+          }
+        ))],
+        skChairPerson: {
+          chairPerson: {
+            name: `${skTerm[0].skChairperson.firstName} ${skTerm[0].skChairperson.middleName[0]}. ${skTerm[0].skChairperson.surname} ${skTerm[0].skChairperson.extName? skTerm[0].skChairperson.extName : ''}`.toUpperCase(),
+            role: 'SK Chairperson',
+            avatar: skTerm[0].skChairperson.picture
+          },
+          skSecretary: {
+            name: `${skTerm[0].skSecretary.firstName} ${skTerm[0].skSecretary.middleName[0]}. ${skTerm[0].skSecretary.surname} ${skTerm[0].skSecretary.extName? skTerm[0].skSecretary.extName : ''}`.toUpperCase(),
+            role: 'SK Secretary',
+            avatar: barangayTerm[0].barangaySecretary.picture
+          },
+          skTreasurer: {
+            name: `${skTerm[0].skTreasurer.firstName} ${skTerm[0].skTreasurer.middleName[0]}. ${skTerm[0].skTreasurer.surname} ${skTerm[0].skTreasurer.extName? skTerm[0].skTreasurer.extName : ''}`.toUpperCase(),
+            role: 'SK Treasurer',
+            avatar: barangayTerm[0].barangayTreasurer.picture
+          },
+          skKagawad: [
+            ...skTerm[0].skCouncilors.map(item => ({
+              name: `${item.firstName} ${item.middleName[0]}. ${item.surname} ${item.extName? item.extName : ''}`.toUpperCase(),
+              role: `SK Councilor - ${item.committee}`,
+              avatar: item.picture
+            }))
+          ]
+        }
+      }
+
+      setOrgChart(brgyOrgChart);
+    }
+  }, [skTerm, barangayTerm])
   return (
     <>
       <SiteMapBoard>
@@ -112,7 +170,9 @@ const Home: React.FC = () => {
           <HeaderText>Organizational Chart</HeaderText>
         </Content>
         <OrganizationalChartContainer>
-          <BrgyOrganizationalChart />
+          {
+            orgChart && <BrgyOrganizationalChart org={orgChart} />
+          }  
         </OrganizationalChartContainer>
       </HomePageContainer>
     </>
