@@ -14,6 +14,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { AccountCircle, Send } from '@mui/icons-material';
 import SmsIcon from '@mui/icons-material/Sms';
 import PrintIcon from '@mui/icons-material/Print';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import { 
     Box,
@@ -22,7 +23,8 @@ import {
     MenuItem,
     ListItemIcon,
     Snackbar,
-    Alert
+    Alert,
+    Badge
  } from '@mui/material'
 
 const SeniorCitizenTable: FC = () => {
@@ -154,7 +156,7 @@ const SeniorCitizenTable: FC = () => {
     //add custom action buttons to top-left of top toolbar
     renderTopToolbarCustomActions={({ table }) => (
 
-      <Box sx={{ display: 'flex', gap: '1rem', p: '4px' }}>
+      <Box sx={{ display: 'flex', gap: '1rem', p: '4px', alignItems: 'center' }}>
         <Button
           color="primary"
           onClick={() => {
@@ -162,8 +164,11 @@ const SeniorCitizenTable: FC = () => {
           }}
           variant="contained"
         >
-          Add Recident
+          Add Resident
         </Button>
+        <Badge sx={{marginLeft: 'auto', marginRight: '10px'}} color="secondary" badgeContent={data.length}>
+          <AccountCircleIcon />
+        </Badge> 
       </Box>
     )}
 

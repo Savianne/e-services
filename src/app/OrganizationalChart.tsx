@@ -4,6 +4,8 @@ import { Tree, TreeNode } from 'react-organizational-chart';
 
 import { IStyledFC } from "./IStyledFC";
 
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 //MUI Component
 import {
     Box,
@@ -167,12 +169,13 @@ const TreeNodeParent = styled(FCTreeNodeParent)`
 `;
 
 const OrgChartContainer = styled(Box)`
-    width: 1030px;
-    min-width: 1030px;
+    max-width: 1030px;
+    min-width: 300px;
     height: fit-content;
 `;
 
 const BrgyOrganizationalChart: React.FC<{org: IBrgyOrgChart}> = ({org}) => {
+    const min1040 = useMediaQuery('(min-width:1040px)');
     return (
         <OrgChartContainer>
             <Tree
@@ -181,54 +184,38 @@ const BrgyOrganizationalChart: React.FC<{org: IBrgyOrgChart}> = ({org}) => {
                 lineBorderRadius={'0'}
                 label={<OrgPersonel color="orange" personel={org.punongBarangay} />}
             >
-                <TreeNode label={<OrgPersonel color="rgb(169, 209, 142)" personel={org.secretary} />} />
-                
-                <TreeNode label={<TreeNodeParent avatar="/brgy-sandiat-centro-logo.jpg" title="Brangay Kagawads"/>}>
-                    {/* <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[0]} logo="/brgy-sandiat-centro-logo.jpg" />}>
-                        <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[1]} logo="/brgy-sandiat-centro-logo.jpg" />}>
-                            <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[2]} logo="/brgy-sandiat-centro-logo.jpg" />}>
-                                <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[3]} logo="/brgy-sandiat-centro-logo.jpg" />}>
-                                    <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[4]} logo="/brgy-sandiat-centro-logo.jpg" />}>
-                                        <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[5]} logo="/brgy-sandiat-centro-logo.jpg" />}>
-                                            <TreeNode label={<OrgPersonel color="rgb(180, 199, 231)" personel={org.kagawad[6]} logo="/brgy-sandiat-centro-logo.jpg" />} />
-                                        </TreeNode>
-                                    </TreeNode>
-                                </TreeNode>
+                {
+                    min1040? <>
+                        <TreeNode label={<OrgPersonel color="rgb(169, 209, 142)" personel={org.secretary} />} />
+                        
+                        <TreeNode label={<TreeNodeParent avatar="/assets/images/brgy-sandiat-centro-logo.jpg" title="Brangay Kagawads"/>}>
+                            {renderKagawad(org.kagawad, '/assets/images/brgy-sandiat-centro-logo.jpg', 0)}
+                        </TreeNode>
+        
+                        <TreeNode label={<TreeNodeParent avatar="/assets/images/SK-logo.png" title="Sanguniang Kabataan"/>}>
+                            {renderKagawad(org.skChairPerson.skKagawad, "/assets/images/SK-logo.png", 0)}
+                        </TreeNode>
+                        <TreeNode label={<OrgPersonel color="rgb(0, 176, 80)" personel={org.treasurer} />} />
+                    </> : <>
+                        <TreeNode label={<OrgPersonel color="rgb(169, 209, 142)" personel={org.secretary} />}>
+                            <TreeNode label={<TreeNodeParent avatar="/assets/images/brgy-sandiat-centro-logo.jpg" title="Brangay Kagawads"/>}>
+                                {renderKagawad(org.kagawad, '/assets/images/brgy-sandiat-centro-logo.jpg', 0)}
                             </TreeNode>
                         </TreeNode>
-                    </TreeNode> */}
-                    {renderKagawad(org.kagawad, 0)}
-                </TreeNode>
 
-                <TreeNode label={<TreeNodeParent avatar="/assets/images/SK-logo.png" title="Sanguniang Kabataan"/>}>
-                    {/* <TreeNode label={<OrgPersonel color="rgb(241, 67, 183)" personel={org.skChairPerson.chairPerson} logo="assets/images/SK-logo.png" />} >
-                        <TreeNode label={<OrgPersonel color="#2196F3" personel={org.skChairPerson.skSecretary} logo="assets/images/SK-logo.png" />}>
-                            <TreeNode label={<OrgPersonel color="#798dfd" personel={org.skChairPerson.skTreasurer} logo="assets/images/SK-logo.png" />}>
-                                <TreeNode label={<OrgPersonel color="rgb(130 43 173)" personel={org.skChairPerson.skKagawad[0]} logo="assets/images/SK-logo.png" />}>
-                                    <TreeNode label={<OrgPersonel color="rgb(130 43 173)" personel={org.skChairPerson.skKagawad[1]} logo="assets/images/SK-logo.png" />}>
-                                        <TreeNode label={<OrgPersonel color="rgb(130 43 173)" personel={org.skChairPerson.skKagawad[2]} logo="assets/images/SK-logo.png" />}>
-                                            <TreeNode label={<OrgPersonel color="rgb(130 43 173)" personel={org.skChairPerson.skKagawad[3]} logo="assets/images/SK-logo.png" />}>
-                                                <TreeNode label={<OrgPersonel color="rgb(130 43 173)" personel={org.skChairPerson.skKagawad[4]} logo="assets/images/SK-logo.png" />}>
-                                                    <TreeNode label={<OrgPersonel color="rgb(130 43 173)" personel={org.skChairPerson.skKagawad[5]} logo="assets/images/SK-logo.png" />}>
-                                                        <TreeNode label={<OrgPersonel color="rgb(130 43 173)" personel={org.skChairPerson.skKagawad[6]} logo="assets/images/SK-logo.png" />} />
-                                                    </TreeNode>
-                                                </TreeNode>
-                                            </TreeNode>
-                                        </TreeNode>
-                                    </TreeNode>
-                                </TreeNode>
+                        <TreeNode label={<OrgPersonel color="rgb(0, 176, 80)" personel={org.treasurer} />} >
+                            <TreeNode label={<TreeNodeParent avatar="/assets/images/SK-logo.png" title="Sanguniang Kabataan"/>}>
+                                {renderKagawad(org.skChairPerson.skKagawad, "/assets/images/SK-logo.png", 0)}
                             </TreeNode>
                         </TreeNode>
-                    </TreeNode> */}
-                    {renderKagawad(org.skChairPerson.skKagawad, 0)}
-                </TreeNode>
-                <TreeNode label={<OrgPersonel color="rgb(0, 176, 80)" personel={org.treasurer} />} />
+                    </>
+                }
             </Tree>
         </OrgChartContainer>
     )
 }
 
-function renderKagawad(kagawadArray: any[], index: number): JSX.Element | null {
+function renderKagawad(kagawadArray: any[], logo: string, index: number): JSX.Element | null {
     if (index >= kagawadArray.length) {
       return null;
     }
@@ -241,11 +228,11 @@ function renderKagawad(kagawadArray: any[], index: number): JSX.Element | null {
           <OrgPersonel
             color="rgb(130 43 173)"
             personel={kagawad}
-            logo="assets/images/SK-logo.png"
+            logo={logo}
           />
         }
       >
-        {renderKagawad(kagawadArray, index + 1)}
+        {renderKagawad(kagawadArray, logo, index + 1)}
       </TreeNode>
     );
 }

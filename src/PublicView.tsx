@@ -37,9 +37,6 @@ const PublicPageBaseContainer = styled(BaseContainer)`
 `
 
 function PublicView() {
-  const [isLogin, setIsLogin] = React.useState(false);
-
-  const themeMode = useAppSelector(state => state.themeModeToggle.mode);
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <ParallaxProvider>

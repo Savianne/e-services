@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, Button, CircularProgress, MenuItem, styled as materialStyles } from "@mui/material";
 import styled from "styled-components";
-
+import { io } from 'socket.io-client';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
@@ -52,6 +52,56 @@ const FCResidentsRequestInteface: React.FC<{className?: string, user: TUser | nu
     const [isAddingRequestDocError, setIsAddingRequestDocError] = useState(false);
     const [isAddingRequestDocSuccess, setIsAddingRequestDocSuccess] = useState(false);
 
+    const reFetch = () => {
+        setIsRefetching(true);
+            doRequest<TRequestItem[]>({
+                method: "POST",
+                url: "/get-request-list",
+                baseURL: "http://localhost:3005/resident",
+                data: {residentUID: user?.residentUID}
+            })
+            .then(res => {
+                setIsRefetching(false);
+                if(res.data) {
+                    setRequestList(res.data)
+                }
+                isError && setIsError(false);
+            })
+            .catch(err => {
+                setIsRefetching(false);
+                setIsError(true);
+            })
+    }
+    function showNotification() {
+        const notification = new Notification('Hello!', {
+          body: 'There is a status update on one of your document requests.',
+          icon: '/logo.png',
+        });
+      }
+    
+    useEffect(() => {
+    const socket = io('http://localhost:3008');
+
+    socket.on(`DOC_REQ_STATUS_UPDATE_FOR_${user?.residentUID}`, (data) => {
+        reFetch();
+        if ('Notification' in window) {
+            if (Notification.permission === 'granted') {
+                showNotification();
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then((permission) => {
+                if (permission === 'granted') {
+                    showNotification();
+                }
+                });
+            }
+        }
+    });
+
+    return function() {
+        socket.disconnect();
+    }
+    }, [user]);
+    
     useEffect(() => {
         if(user) {
             setIsLoading(true);
@@ -78,7 +128,7 @@ const FCResidentsRequestInteface: React.FC<{className?: string, user: TUser | nu
         <div className={className}>
             <AppBar elevation={2}>
                 <Avatar sx={{height: '60px', width: '60px'}} />
-                <strong>Mark Nino Q. Baylon</strong>
+                <strong>{user?.name}</strong>
                 <div className="pending-badge">
                     <Badge color="secondary" badgeContent={requestList.length}>
                         <PendingActionsIcon />
@@ -177,24 +227,7 @@ const FCResidentsRequestInteface: React.FC<{className?: string, user: TUser | nu
                                 setIsAddingRequestDocSuccess(true);
                                 isAddingRequestDocError && setIsAddingRequestDocError(false);
                                 //Refetch List
-                                setIsRefetching(true);
-                                doRequest<TRequestItem[]>({
-                                    method: "POST",
-                                    url: "/get-request-list",
-                                    baseURL: "http://localhost:3005/resident",
-                                    data: {residentUID: user?.residentUID}
-                                })
-                                .then(res => {
-                                    setIsRefetching(false);
-                                    if(res.data) {
-                                        setRequestList(res.data)
-                                    }
-                                    isError && setIsError(false);
-                                })
-                                .catch(err => {
-                                    setIsRefetching(false);
-                                    setIsError(true);
-                                })
+                                reFetch();
                             }
                         })
                         .catch(err => {

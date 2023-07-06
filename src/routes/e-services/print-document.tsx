@@ -161,7 +161,6 @@ const PrintDocument: React.FC = () => {
                             <Divider orientation="horizontal" sx={{width: '100%', margin: '20px 0'}} />
                             <div className="btn-area">
                                 <GenerateBtn disabled={!(resident !== null && doctype == "indigency" && purpose.length > 5)} onClick={() => {
-                                    alert('sdvs')
                                     const payload = {
                                         residentUID: resident?.residentUID as string,
                                         type: doctype,

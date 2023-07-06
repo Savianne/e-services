@@ -10,7 +10,7 @@ import useGetBarangayOfficials from "../../API/hooks/useGetBarangayOfficials";
 import useGetSKOfficials from "../../API/hooks/useGetSKOfficials";
 import { IBrgyOrgChart } from "../../app/OrganizationalChart";
 import doRequest from "../../API/doRequest";
-import { userInfo } from "os";
+
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 const BaseContainer = styled(Box)`
@@ -286,6 +286,7 @@ const PublicPage: React.FC = () => {
     const [user, setUser] = useState<TUser | null>(null);
 
     const [isLoading, setIsLoading] = useState(false);
+      
     useEffect(() => {
         setIsLoading(true);
         doRequest<TUser>({
@@ -355,7 +356,8 @@ const PublicPage: React.FC = () => {
     
           setOrgChart(brgyOrgChart);
         }
-      }, [skTerm, barangayTerm])
+      }, [skTerm, barangayTerm]);
+
     return (
     <BaseContainer>
         <Backdrop

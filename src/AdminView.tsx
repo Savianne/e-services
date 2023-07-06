@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material';
 import { useAppSelector } from './global-state/hooks';
 import { ParallaxProvider } from 'react-scroll-parallax';
-
+import { io } from 'socket.io-client';
 //Date Picker 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 // date-fns
@@ -37,6 +37,9 @@ import SKTermsOfService from './routes/information/sk-term-of-service';
 import SeniorCitizens from './routes/information/senior-citizens';
 import PrintDocument from './routes/e-services/print-document';
 import DocumentRequest from './routes/e-services/document-request';
+import SmsSender from './routes/e-services/sms-sender';
+import AdminAccountContext from './context/adminAccountContext';
+import MyAccount from './routes/my-account';
 
 const BaseContainer = styled(Box)`
   display: flex;
@@ -50,14 +53,52 @@ const PublicPageBaseContainer = styled(BaseContainer)`
   background-color: white;
 `
 
-function AdminView() {
-  const [admin, setAdmin] = useState(null);
-  
-  const themeMode = useAppSelector(state => state.themeModeToggle.mode);
-  useEffect(() => {
 
-  }, [])
+function AdminView() {
+  const themeMode = useAppSelector(state => state.themeModeToggle.mode);
+
+  function showNotification() {
+    const notification = new Notification('Hello Admin', {
+      body: 'New Document Request Added!',
+      icon: '/logo.png',
+    });
+  
+    notification.addEventListener('click', () => {
+      // Handle notification click event
+    });
+  
+    notification.addEventListener('close', () => {
+      // Handle notification close event
+    });
+  }
+
+  useEffect(() => {
+    const socket = io('http://localhost:3008');
+
+    socket.on('NEW_DOC_REQUEST', (data) => {
+      if ('Notification' in window) {
+        if (Notification.permission === 'granted') {
+          showNotification();
+        } else if (Notification.permission !== 'denied') {
+          Notification.requestPermission().then((permission) => {
+            if (permission === 'granted') {
+              showNotification();
+            }
+          });
+        }
+      }
+    });
+
+    return function() {
+        socket.disconnect();
+    }
+}, []);
+
+useEffect(() => {
+  
+}, [])
   return (
+  <AdminAccountContext>
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <ParallaxProvider>
         <ThemeProvider theme={themeMode == 'light'? lightTheme : darkTheme}>
@@ -65,6 +106,7 @@ function AdminView() {
           <BrowserRouter>
             <Routes>
               <Route path="/admin" element={<BaseContainer><AppLayout /></BaseContainer>}>
+                <Route path="/admin/my-account" index element={<MyAccount />} />
                 <Route path="/admin/home" index element={<Home />} />
                 <Route path="/admin/information">
                   <Route index element={<Information />} />
@@ -87,7 +129,9 @@ function AdminView() {
                 </Route>
                 <Route path="/admin/e-services" >
                   <Route index element={<EServices />} />
-                  <Route path="/admin/e-services/sms" element={<h1>SMS</h1>} />
+                  <Route path="/admin/e-services/sms">
+                    <Route index element={<SmsSender />} />
+                  </Route>
                   <Route path="/admin/e-services/print-document">
                     <Route index element={<PrintDocument />} />
                     <Route path="/admin/e-services/print-document/:residentUID" element={<PrintDocument />} />
@@ -100,6 +144,7 @@ function AdminView() {
         </ThemeProvider>
       </ParallaxProvider>
     </LocalizationProvider>
+    </AdminAccountContext>
   );
 }
 

@@ -42,7 +42,7 @@ const EServices: React.FC = () => {
                 <RouteContent>
                     <CardContainer>
                         <RecordsCard title="SMS" icon={<SmsIcon/>} color="#009688" link="sms" />
-                        <RecordsCard title="Document Request" recordsCount={15} icon={<ChecklistRtlIcon />} color="#607D8B" link="document-request" />
+                        <RecordsCard title="Document Request" icon={<ChecklistRtlIcon />} color="#607D8B" link="document-request" />
                     </CardContainer>
                     <CardContainer>
                         <RecordsCard title="Print Document" icon={<LocalPrintshopIcon/>} color="#3F51B5" link="print-document" />

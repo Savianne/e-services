@@ -8,6 +8,9 @@ import useGetSKTerms from "../../API/hooks/useGetSKTerms";
 import useGetTerms from "../../API/hooks/useGetTerms";
 import SiteMapBoard from "../../app/SiteMapBoard";
 
+import { useContext } from "react";
+import { AdminAccountContextProvider } from "../../context/adminAccountContext";
+
 //MUI Component
 import {
     Box,
@@ -53,15 +56,17 @@ const OrganizationalChartContainer = styled(Box)`
   padding: 30px 0;
   min-width: 0;
 
-  @media screen and (max-width: 1045px) {
+  /* @media screen and (max-width: 1045px) {
     & {
       justify-content: left;
     }
-  }
+  } */
 `;
 
 
 const Home: React.FC = () => {
+  const adminInfo = useContext(AdminAccountContextProvider);
+
   const {data: skTerm} = useGetSKTerms();
   const {data: barangayTerm} = useGetTerms();
   const [orgChart, setOrgChart] = useState<null | IBrgyOrgChart>(null);
@@ -123,22 +128,21 @@ const Home: React.FC = () => {
   return (
     <>
       <SiteMapBoard>
-          Welcome, Admin Apple Jane De Guzman
+          Welcome, Admin {adminInfo?.name as string}
       </SiteMapBoard>
       <HomePageContainer>
         <ParallaxTitle title="ABOUT" img="/assets/images/community-parallax-img.jpg" />
         <Content>
           <TextContent>
             <Typography>
-              The Macedonian Personal Ministry, Inc (MPM) was originally conceptualized by Pastor 
-              Ferdinand S. Florez of the Church of Christ at Roxas, Isabela in 2018. Although, it 
-              took a whole year of planning, promotion, and collaboration. It was formally launched 
-              in June 2019. Some of the Churches of Christ pastors who also spearheaded the MPM 
-              launching were Pastor Art Santiago of Las Pinas, Pastor Ephraim Sison of Balic-Balic, 
-              Pastor Vher Palang of Project 7, and many others. MPM was registered with the Security 
-              Exchange Commission on November 26, 2019. Today, there are hundreds of leaders and church 
-              members of the Churches of Christ in the Philippines and abroad who have already joined 
-              and committed to this personal ministry.
+            Barangay Sandiat Centro is a barangay located in the municipality of San Manuel in the province of Isabela, Philippines.
+Isabela is a province in the Cagayan Valley region of the country. San Manuel is one of the municipalities within
+the province and is situated in the southern part of Isabela. As a barangay, Sandiat Centro serves as the smallest 
+administrative division in the Philippines. It is headed by a barangay captain or chairman who is elected by the residents. 
+The barangay government is responsible for implementing local policies, providing basic services, and addressing the needs 
+of its constituents. Barangay Sandiat Centro, like other barangays, has its own barangay hall or office where local affairs 
+are conducted. The barangay hall serves as a venue for community meetings, events, and gatherings. It is also where residents 
+can seek assistance, report concerns, or avail of barangay services.
             </Typography>
           </TextContent>
         </Content>
@@ -146,10 +150,9 @@ const Home: React.FC = () => {
         <Content>
           <TextContent>
             <Typography>
-              Macedonian Personal Ministry (MPM) is a faith-based and non-profit organization within the 
-              Churches of Christ and Christian Churches whose main goal is to fulfill the Great Commission 
-              stated in Matthew 28:19-20. MPM also wants to fulfill Jesus Christ’s commands for believers 
-              to serve one another in love.
+              The barangay shall provide the people wit basic learning and facilities which on the Republic Act 9003
+              which is the Ecological Solid Waste Management to achieve Environmental change or to have quality and
+              Health surrounding as per committed to the implementation on the R.A. 9003.
             </Typography>
           </TextContent>
         </Content>
@@ -157,11 +160,9 @@ const Home: React.FC = () => {
         <Content>
           <TextContent>
             <Typography>
-              In conjunction with local churches,  MPM leaders travel around the country to visit churches that 
-              seek assistance through the training provided by MPM’s faithful, dedicated and hardworking pastors 
-              and leaders. Seminars and workshops are held to introduce and share MPM’s vision to obey Jesus Christ’s 
-              command to spread the Gospel as well as teaching believers to desire continued spiritual growth and 
-              maturity hence be propagators of the Gospel, too.
+              Our VISION within the next year, people/constituents of Barangay Sandiat Centro shall be imbued with
+              sense of responsibility, protect care and change of environmental quality that conducive to their well
+              being ang our next generation.
             </Typography>
           </TextContent>
         </Content>

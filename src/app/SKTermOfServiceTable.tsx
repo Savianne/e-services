@@ -43,8 +43,8 @@ const SKTermsOfServiceTable:React.FC = () => {
             enableColumnFilter: true,
             enableSorting: true,
             accessorFn: (row) => `${row.skChairperson.firstName} ${row.skChairperson.middleName} ${row.skChairperson.surname} ${row.skChairperson.extName}`, //access nested data with dot notation
-            id: 'punong-barangay',
-            header: 'Punong Barangay',
+            id: 'sk-chairman',
+            header: 'SK Chairman',
             Cell: ({ renderedCellValue, row, column }) => (
                 <Box
                   sx={{
