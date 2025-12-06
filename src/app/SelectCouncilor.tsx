@@ -65,6 +65,7 @@ const SelectBarangayCouncilorModal: React.FC<{onSelect: (e:PersonOptionWithCommi
       url: `/get-committee/${org}`,
     })
     .then(response => {
+      alert(response)
       setCommittee(response.data as TCommittee[]);
     })
   }, [])
@@ -86,7 +87,7 @@ const SelectBarangayCouncilorModal: React.FC<{onSelect: (e:PersonOptionWithCommi
                         <Box component="li" sx={{fontSize: '11px'}} {...props}>
                           <Avatar
                             sx={{height: '30px', width: '30px', marginRight: '10px'}}
-                            src={`/assets/images/avatar${option.picture}`}
+                            src={option.picture? `/assets/images/avatar${option.picture}` : undefined}
                             alt=""
                           />
                           {option.fullName}

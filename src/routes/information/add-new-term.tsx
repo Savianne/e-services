@@ -78,7 +78,7 @@ const PersonCard: React.FC<{person: PersonWithCommittee, cardColor:string}> = ({
     return(
         <PersonPaper cardColor={cardColor}>
             <div className="picture-area">
-                <Avatar src={`/assets/images/avatar/${person.picture}`} sx={{height: "60px", width: "60px"}} />
+                <Avatar src={person.picture? `/assets/images/avatar/${person.picture}` : undefined} sx={{height: "60px", width: "60px"}} />
             </div>
             <div className="col-right">
                 <div className="name">{person.fullName}</div>
@@ -168,6 +168,7 @@ const AddNewTermsOfService: React.FC = () => {
 
     useEffect(() => {
         if(data) {
+            console.log(data)
             const options:  {
                 fullName: string,
                 picture: string | null,
@@ -180,6 +181,7 @@ const AddNewTermsOfService: React.FC = () => {
 
             setOptions(options);
         }
+
     }, [data]);
 
     useEffect(() => {
